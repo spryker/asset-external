@@ -177,6 +177,9 @@ class AssetExternalFacadeTest extends Unit
         $assetExternalFacade->deleteAsset($assetDeletedMessageTransfer);
     }
 
+    /**
+     * @return void
+     */
     public function testDeleteAssetAssert(): void
     {
         // Arrange

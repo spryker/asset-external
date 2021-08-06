@@ -77,10 +77,13 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
             ->findByFkAssetExternal($assetExternalTransfer->getIdAssetExternalOrFail())
             ->delete();
 
-        $this->getFactory()
+        $assetExternalEntity = $this->getFactory()
             ->createAssetExternalQuery()
-            ->findOneByIdAssetExternal($assetExternalTransfer->getIdAssetExternalOrFail())
-            ->delete();
+            ->findOneByIdAssetExternal($assetExternalTransfer->getIdAssetExternalOrFail());
+
+        if ($assetExternalEntity !== null) {
+            $assetExternalEntity->delete();
+        }
     }
 
     /**
@@ -93,7 +96,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
     {
         $storeEntity = $this->getFactory()->createStoreQuery()->findOneByName($storeName);
 
-        if ($storeEntity) {
+        if ($storeEntity !== null) {
             $assetExternalStoreEntity = $this->getFactory()
                 ->createAssetExternalStoreQuery()
                 ->filterByFkAssetExternal($fkAssetExternal)
