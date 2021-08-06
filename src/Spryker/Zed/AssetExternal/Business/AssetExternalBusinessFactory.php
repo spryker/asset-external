@@ -7,6 +7,8 @@
 
 namespace Spryker\Zed\AssetExternal\Business;
 
+use Spryker\Zed\AssetExternal\Business\Model\AssetExternalHandler;
+use Spryker\Zed\AssetExternal\Business\Model\AssetExternalHandlerInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
 /**
@@ -16,4 +18,15 @@ use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
  */
 class AssetExternalBusinessFactory extends AbstractBusinessFactory
 {
+    /**
+     * @return \Spryker\Zed\AssetExternal\Business\Model\AssetExternalHandlerInterface
+     */
+    public function createAssetExternalHandler(): AssetExternalHandlerInterface
+    {
+        return new AssetExternalHandler(
+            $this->getEntityManager(),
+            $this->getRepository(),
+            $this->getConfig()
+        );
+    }
 }

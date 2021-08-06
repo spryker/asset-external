@@ -7,6 +7,21 @@
 
 namespace Spryker\Zed\AssetExternal\Persistence;
 
+use Generated\Shared\Transfer\AssetExternalTransfer;
+
 interface AssetExternalRepositoryInterface
 {
+    /**
+     * @param string $assetUuid
+     *
+     * @return \Generated\Shared\Transfer\AssetExternalTransfer|null
+     */
+    public function findAssetExternalByAssetUuid(string $assetUuid): ?AssetExternalTransfer;
+
+    /**
+     * @param string $key
+     *
+     * @return int|null
+     */
+    public function getIdCmsSlotByKey(string $key): ?int;
 }

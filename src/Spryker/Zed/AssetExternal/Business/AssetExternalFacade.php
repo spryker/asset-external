@@ -7,6 +7,10 @@
 
 namespace Spryker\Zed\AssetExternal\Business;
 
+use Generated\Shared\Transfer\AssetAddedMessageTransfer;
+use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
+use Generated\Shared\Transfer\AssetExternalTransfer;
+use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 /**
@@ -16,4 +20,45 @@ use Spryker\Zed\Kernel\Business\AbstractFacade;
  */
 class AssetExternalFacade extends AbstractFacade implements AssetExternalFacadeInterface
 {
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\AssetAddedMessageTransfer $assetAddedMessageTransfer
+     *
+     * @return \Generated\Shared\Transfer\AssetExternalTransfer
+     */
+    public function addAsset(AssetAddedMessageTransfer $assetAddedMessageTransfer): AssetExternalTransfer
+    {
+        return $this->getFactory()->createAssetExternalHandler()->addAsset($assetAddedMessageTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\AssetUpdatedMessageTransfer $assetUpdatedMessageTransfer
+     *
+     * @return \Generated\Shared\Transfer\AssetExternalTransfer
+     */
+    public function updateAsset(AssetUpdatedMessageTransfer $assetUpdatedMessageTransfer): AssetExternalTransfer
+    {
+        return $this->getFactory()->createAssetExternalHandler()->updateAsset($assetUpdatedMessageTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\AssetDeletedMessageTransfer $assetDeletedMessageTransfer
+     *
+     * @return void
+     */
+    public function deleteAsset(AssetDeletedMessageTransfer $assetDeletedMessageTransfer): void
+    {
+        $this->getFactory()->createAssetExternalHandler()->deleteAsset($assetDeletedMessageTransfer);
+    }
 }

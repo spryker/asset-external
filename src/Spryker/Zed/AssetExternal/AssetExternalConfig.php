@@ -18,6 +18,6 @@ class AssetExternalConfig extends AbstractBundleConfig
      */
     public function getCurrentTenantUuid(): string
     {
-        return '';
+        return (string)getenv('TENANT_UUID');
     }
 }

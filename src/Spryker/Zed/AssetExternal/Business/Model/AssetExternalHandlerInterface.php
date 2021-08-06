@@ -5,20 +5,16 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\AssetExternal\Business;
+namespace Spryker\Zed\AssetExternal\Business\Model;
 
 use Generated\Shared\Transfer\AssetAddedMessageTransfer;
 use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
 use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
 
-interface AssetExternalFacadeInterface
+interface AssetExternalHandlerInterface
 {
     /**
-     * Specification:
-     *
-     * @api
-     *
      * @param \Generated\Shared\Transfer\AssetAddedMessageTransfer $assetAddedMessageTransfer
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
@@ -26,10 +22,6 @@ interface AssetExternalFacadeInterface
     public function addAsset(AssetAddedMessageTransfer $assetAddedMessageTransfer): AssetExternalTransfer;
 
     /**
-     * Specification:
-     *
-     * @api
-     *
      * @param \Generated\Shared\Transfer\AssetUpdatedMessageTransfer $assetUpdatedMessageTransfer
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
@@ -37,10 +29,6 @@ interface AssetExternalFacadeInterface
     public function updateAsset(AssetUpdatedMessageTransfer $assetUpdatedMessageTransfer): AssetExternalTransfer;
 
     /**
-     * Specification:
-     *
-     * @api
-     *
      * @param \Generated\Shared\Transfer\AssetDeletedMessageTransfer $assetDeletedMessageTransfer
      *
      * @return void
