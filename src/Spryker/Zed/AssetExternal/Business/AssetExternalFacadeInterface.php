@@ -16,6 +16,13 @@ interface AssetExternalFacadeInterface
 {
     /**
      * Specification:
+     * - Creates a new asset external entity.
+     * - Uses incoming transfer to set entity fields.
+     * - Persists the entity to DB.
+     * - Sets ID to the returning transfer.
+     * - Creates a new relations assetExternalStoreEntity.
+     * - Returns asset external response with newly created asset external transfer inside.
+     * - Throws InvalidAssetExternalException in case a record is found.
      *
      * @api
      *
@@ -27,6 +34,12 @@ interface AssetExternalFacadeInterface
 
     /**
      * Specification:
+     * - Finds an asset external record by ID in DB.
+     * - Uses incoming transfer to update entity fields.
+     * - Persists the entity to DB.
+     * - Updates a new relations assetExternalStoreEntity.
+     * - Returns asset external response with updated asset external transfer inside.
+     * - Throws InvalidAssetExternalException in case a record is not found.
      *
      * @api
      *
@@ -38,6 +51,8 @@ interface AssetExternalFacadeInterface
 
     /**
      * Specification:
+     * - Removes an asset external record by ID in DB.
+     * - Removes related entity assetExternalStoreEntity.
      *
      * @api
      *
