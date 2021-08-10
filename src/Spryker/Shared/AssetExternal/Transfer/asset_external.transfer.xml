@@ -9,7 +9,7 @@
         <property name="assetName" type="string"/>
         <property name="idCmsSlot" type="int"/>
         <property name="assetContent" type="string"/>
-        <property name="storeNames" type="string[]" singular="storeName"/>
+        <property name="stores" type="string[]" singular="store"/>
     </transfer>
 
     <transfer name="AssetAddedMessage" strict="true">

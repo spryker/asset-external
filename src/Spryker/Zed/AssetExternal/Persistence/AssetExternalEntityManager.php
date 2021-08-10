@@ -27,7 +27,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
             ->requireAssetName()
             ->requireAssetContent()
             ->requireIdCmsSlot()
-            ->requireStoreNames();
+            ->requireStores();
 
         $assetExternalEntity = $this->getFactory()
             ->createAssetExternalQuery()
@@ -51,14 +51,14 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function saveAssetExternalStoreByAssetExternalTransfer(
+    protected function saveAssetExternalStoreByAssetExternalTransfer(
         AssetExternalTransfer $assetExternalTransfer
     ): AssetExternalTransfer {
-        $assetExternalTransfer->requireIdAssetExternal()->requireStoreNames();
+        $assetExternalTransfer->requireIdAssetExternal()->requireStores();
 
         $fkAssetExternal = (int)$assetExternalTransfer->getIdAssetExternal();
 
-        foreach ($assetExternalTransfer->getStoreNames() as $storeName) {
+        foreach ($assetExternalTransfer->getStores() as $storeName) {
             $this->saveAssetExternalStore($fkAssetExternal, $storeName);
         }
 

@@ -44,7 +44,7 @@ class AssetExternalRepository extends AbstractRepository implements AssetExterna
             ->find();
 
         foreach ($assetExternalStoreEntities as $assetExternalStoreEntity) {
-            $assetExternalTransfer->addStoreName((string)$assetExternalStoreEntity->getSpyStore()->getName());
+            $assetExternalTransfer->addStore((string)$assetExternalStoreEntity->getSpyStore()->getName());
         }
 
         return $assetExternalTransfer;

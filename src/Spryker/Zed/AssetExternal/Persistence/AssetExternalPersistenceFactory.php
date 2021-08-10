@@ -12,6 +12,7 @@ use Orm\Zed\AssetExternal\Persistence\SpyAssetExternalStoreQuery;
 use Orm\Zed\CmsSlot\Persistence\SpyCmsSlotQuery;
 use Orm\Zed\Store\Persistence\SpyStoreQuery;
 use Spryker\Zed\AssetExternal\Persistence\Mapper\AssetExternalMapper;
+use Spryker\Zed\AssetExternal\Persistence\Mapper\AssetExternalMapperInterface;
 use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
 
 /**
@@ -54,9 +55,9 @@ class AssetExternalPersistenceFactory extends AbstractPersistenceFactory
     }
 
     /**
-     * @return \Spryker\Zed\AssetExternal\Persistence\Mapper\AssetExternalMapper
+     * @return \Spryker\Zed\AssetExternal\Persistence\Mapper\AssetExternalMapperInterface
      */
-    public function createAssetExternalMapper(): AssetExternalMapper
+    public function createAssetExternalMapper(): AssetExternalMapperInterface
     {
         return new AssetExternalMapper();
     }
