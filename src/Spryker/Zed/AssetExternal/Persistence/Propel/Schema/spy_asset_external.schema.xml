@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
-<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          name="zed"
-          xsi:noNamespaceSchemaLocation="http://static.spryker.com/schema-01.xsd"
-          namespace="Orm\Zed\AssetExternal\Persistence" package="src.Orm.Zed.AssetExternal.Persistence">
+<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="zed" xsi:noNamespaceSchemaLocation="http://static.spryker.com/schema-01.xsd" namespace="Orm\Zed\AssetExternal\Persistence" package="src.Orm.Zed.AssetExternal.Persistence">
 
     <table name="spy_asset_external" identifierQuoting="true">
         <column name="id_asset_external" required="true" type="INTEGER" autoIncrement="true" primaryKey="true"/>
