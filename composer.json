@@ -5,7 +5,8 @@
     "license": "proprietary",
     "require": {
         "php": ">=7.3",
-        "spryker/kernel": "^3.30.0"
+        "spryker/kernel": "^3.30.0",
+        "spryker/transfer": "^3.25.0"
     },
     "require-dev": {
         "spryker/code-sniffer": "*",
