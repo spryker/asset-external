@@ -259,6 +259,9 @@ class AssetExternalFacadeTest extends Unit
     }
 
     /**
+     * @param string $tenantUuid
+     * @param string $cmsSlotKey
+     *
      * @return \Generated\Shared\Transfer\AssetDeletedMessageTransfer
      */
     protected function buildAssetDeletedMessageTransfer(string $tenantUuid, string $cmsSlotKey = 'test'): AssetDeletedMessageTransfer
