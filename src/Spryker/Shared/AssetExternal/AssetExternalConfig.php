@@ -7,6 +7,8 @@
 
 namespace Spryker\Shared\AssetExternal;
 
+use Spryker\Shared\Kernel\AbstractSharedConfig;
+
 /**
  * Declares global environment configuration keys. Do not use it for other class constants.
  */

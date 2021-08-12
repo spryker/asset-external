@@ -13,11 +13,13 @@ interface AssetExternalEntityManagerInterface
 {
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     * @param \Generated\Shared\Transfer\StoreTransfer[] $storeTransfers
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
     public function saveAssetExternalAssetExternalWithAssetExternalStore(
-        AssetExternalTransfer $assetExternalTransfer
+        AssetExternalTransfer $assetExternalTransfer,
+        array $storeTransfers
     ): AssetExternalTransfer;
 
     /**

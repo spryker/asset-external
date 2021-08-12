@@ -7,8 +7,8 @@
 
 namespace Spryker\Zed\AssetExternal;
 
-use Orm\Zed\CmsSlot\Persistence\SpyCmsSlotQuery;
-use Orm\Zed\Store\Persistence\SpyStoreQuery;
+use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridge;
+use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridge;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 
@@ -17,20 +17,19 @@ use Spryker\Zed\Kernel\Container;
  */
 class AssetExternalDependencyProvider extends AbstractBundleDependencyProvider
 {
-    public const PROPEL_QUERY_STORE = 'PROPEL_QUERY_STORE';
-    public const PROPEL_QUERY_CMS_SLOT = 'PROPEL_QUERY_CMS_SLOT';
+    public const FACADE_STORE = 'FACADE_STORE';
+    public const FACADE_CMS_SLOT = 'FACADE_CMS_SLOT';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function providePersistenceLayerDependencies(Container $container)
+    public function provideBusinessLayerDependencies(Container $container): Container
     {
-        $container = parent::providePersistenceLayerDependencies($container);
-
-        $container = $this->addStorePropelQuery($container);
-        $container = $this->addCmsSlotPropelQuery($container);
+        $container = parent::provideBusinessLayerDependencies($container);
+        $container = $this->addStoreFacade($container);
+        $container = $this->addCmsSlotFacade($container);
 
         return $container;
     }
@@ -40,11 +39,11 @@ class AssetExternalDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function addStorePropelQuery(Container $container): Container
+    protected function addStoreFacade(Container $container): Container
     {
-        $container->set(static::PROPEL_QUERY_STORE, $container->factory(function () {
-            return SpyStoreQuery::create();
-        }));
+        $container->set(static::FACADE_STORE, function (Container $container) {
+            return new AssetExternalToStoreBridge($container->getLocator()->store()->facade());
+        });
 
         return $container;
     }
@@ -54,11 +53,11 @@ class AssetExternalDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function addCmsSlotPropelQuery(Container $container): Container
+    protected function addCmsSlotFacade(Container $container): Container
     {
-        $container->set(static::PROPEL_QUERY_CMS_SLOT, $container->factory(function () {
-            return SpyCmsSlotQuery::create();
-        }));
+        $container->set(static::FACADE_CMS_SLOT, function (Container $container) {
+            return new AssetExternalToCmsSlotFacadeBridge($container->getLocator()->cmsSlot()->facade());
+        });
 
         return $container;
     }

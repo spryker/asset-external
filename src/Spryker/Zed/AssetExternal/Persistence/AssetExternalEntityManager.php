@@ -17,11 +17,13 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 {
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     * @param \Generated\Shared\Transfer\StoreTransfer[] $storeTransfers
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
     public function saveAssetExternalAssetExternalWithAssetExternalStore(
-        AssetExternalTransfer $assetExternalTransfer
+        AssetExternalTransfer $assetExternalTransfer,
+        array $storeTransfers
     ): AssetExternalTransfer {
         $assetExternalTransfer->requireAssetUuid()
             ->requireAssetName()
@@ -43,23 +45,26 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
         $assetExternalTransfer->setIdAssetExternal($assetExternalEntity->getIdAssetExternal());
 
-        return $this->saveAssetExternalStoreByAssetExternalTransfer($assetExternalTransfer);
+        return $this->saveAssetExternalStoreByAssetExternalTransfer($assetExternalTransfer, $storeTransfers);
     }
 
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     * @param \Generated\Shared\Transfer\StoreTransfer[] $storeTransfers
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
     protected function saveAssetExternalStoreByAssetExternalTransfer(
-        AssetExternalTransfer $assetExternalTransfer
+        AssetExternalTransfer $assetExternalTransfer,
+        array $storeTransfers
     ): AssetExternalTransfer {
         $assetExternalTransfer->requireIdAssetExternal()->requireStores();
 
-        $fkAssetExternal = (int)$assetExternalTransfer->getIdAssetExternal();
-
-        foreach ($assetExternalTransfer->getStores() as $storeName) {
-            $this->saveAssetExternalStore($fkAssetExternal, $storeName);
+        foreach ($storeTransfers as $storeTransfer) {
+            $this->saveAssetExternalStore(
+                (int)$assetExternalTransfer->getIdAssetExternal(),
+                (int)$storeTransfer->getIdStore()
+            );
         }
 
         return $assetExternalTransfer;
@@ -88,23 +93,19 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
     /**
      * @param int $fkAssetExternal
-     * @param string $storeName
+     * @param int $fkStore
      *
      * @return void
      */
-    protected function saveAssetExternalStore(int $fkAssetExternal, string $storeName): void
+    protected function saveAssetExternalStore(int $fkAssetExternal, int $fkStore): void
     {
-        $storeEntity = $this->getFactory()->getStorePropelQuery()->findOneByName($storeName);
+        $assetExternalStoreEntity = $this->getFactory()
+            ->createAssetExternalStoreQuery()
+            ->filterByFkAssetExternal($fkAssetExternal)
+            ->filterByFkStore($fkStore)
+            ->findOneOrCreate();
 
-        if ($storeEntity !== null) {
-            $assetExternalStoreEntity = $this->getFactory()
-                ->createAssetExternalStoreQuery()
-                ->filterByFkAssetExternal($fkAssetExternal)
-                ->filterBySpyStore($storeEntity)
-                ->findOneOrCreate();
-
-            $assetExternalStoreEntity->setFkAssetExternal($fkAssetExternal)->setSpyStore($storeEntity);
-            $assetExternalStoreEntity->save();
-        }
+        $assetExternalStoreEntity->setFkAssetExternal($fkAssetExternal)->setFkStore($fkStore);
+        $assetExternalStoreEntity->save();
     }
 }

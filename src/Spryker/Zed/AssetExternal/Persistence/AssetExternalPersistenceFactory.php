@@ -9,9 +9,6 @@ namespace Spryker\Zed\AssetExternal\Persistence;
 
 use Orm\Zed\AssetExternal\Persistence\SpyAssetExternalQuery;
 use Orm\Zed\AssetExternal\Persistence\SpyAssetExternalStoreQuery;
-use Orm\Zed\CmsSlot\Persistence\SpyCmsSlotQuery;
-use Orm\Zed\Store\Persistence\SpyStoreQuery;
-use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
 use Spryker\Zed\AssetExternal\Persistence\Mapper\AssetExternalMapper;
 use Spryker\Zed\AssetExternal\Persistence\Mapper\AssetExternalMapperInterface;
 use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
@@ -45,21 +42,5 @@ class AssetExternalPersistenceFactory extends AbstractPersistenceFactory
     public function createAssetExternalMapper(): AssetExternalMapperInterface
     {
         return new AssetExternalMapper();
-    }
-
-    /**
-     * @return \Orm\Zed\Store\Persistence\SpyStoreQuery
-     */
-    public function getStorePropelQuery(): SpyStoreQuery
-    {
-        return $this->getProvidedDependency(AssetExternalDependencyProvider::PROPEL_QUERY_STORE);
-    }
-
-    /**
-     * @return \Orm\Zed\CmsSlot\Persistence\SpyCmsSlotQuery
-     */
-    public function getCmsSlotPropelQuery(): SpyCmsSlotQuery
-    {
-        return $this->getProvidedDependency(AssetExternalDependencyProvider::PROPEL_QUERY_CMS_SLOT);
     }
 }

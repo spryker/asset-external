@@ -11,14 +11,28 @@ use Generated\Shared\Transfer\AssetAddedMessageTransfer;
 use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
 use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
+use Generated\Shared\Transfer\CmsSlotCriteriaTransfer;
 use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantUuidException;
+use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
+use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface;
+use Spryker\Zed\CmsSlot\Business\Exception\MissingCmsSlotException;
 
 class AssetExternalHandler implements AssetExternalHandlerInterface
 {
+    /**
+     * @var \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface
+     */
+    protected $storeFacade;
+
+    /**
+     * @var \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface
+     */
+    protected $cmsSlotFacade;
+
     /**
      * @var string
      */
@@ -35,15 +49,21 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     protected $assetExternalEntityManager;
 
     /**
+     * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface $storeFacade
+     * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface $assetExternalEntityManager
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface $assetExternalRepository
      * @param \Spryker\Zed\AssetExternal\AssetExternalConfig $config
      */
     public function __construct(
+        AssetExternalToStoreBridgeInterface $storeFacade,
+        AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade,
         AssetExternalEntityManagerInterface $assetExternalEntityManager,
         AssetExternalRepositoryInterface $assetExternalRepository,
         AssetExternalConfig $config
     ) {
+        $this->storeFacade = $storeFacade;
+        $this->cmsSlotFacade = $cmsSlotFacade;
         $this->currentTenantUuid = $config->getCurrentTenantUuid();
         $this->assetExternalRepository = $assetExternalRepository;
         $this->assetExternalEntityManager = $assetExternalEntityManager;
@@ -83,8 +103,10 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->setIdCmsSlot($idCmsSlot)
             ->setStores($assetAddedMessageTransfer->getStores());
 
+        $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer);
+
         return $this->assetExternalEntityManager
-            ->saveAssetExternalAssetExternalWithAssetExternalStore($assetExternalTransfer);
+            ->saveAssetExternalAssetExternalWithAssetExternalStore($assetExternalTransfer, $storeTransfers);
     }
 
     /**
@@ -118,8 +140,10 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->setIdCmsSlot($idCmsSlot)
             ->setStores($assetUpdatedMessageTransfer->getStores());
 
+        $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer);
+
         return $this->assetExternalEntityManager
-            ->saveAssetExternalAssetExternalWithAssetExternalStore($assetExternalTransfer);
+            ->saveAssetExternalAssetExternalWithAssetExternalStore($assetExternalTransfer, $storeTransfers);
     }
 
     /**
@@ -167,13 +191,22 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      */
     protected function getIdCmsSlotByKey(string $key): int
     {
-        $cmsSlotKeyId = $this->assetExternalRepository
-            ->findIdCmsSlotByKey($key);
-
-        if ($cmsSlotKeyId === null) {
+        try {
+            $cmsSlotTransfer = $this->cmsSlotFacade->getCmsSlot((new CmsSlotCriteriaTransfer())->setKey($key));
+        } catch (MissingCmsSlotException $exception) {
             throw new InvalidAssetExternalException('This asset has invalid cms slot key.');
         }
 
-        return $cmsSlotKeyId;
+        return (int)$cmsSlotTransfer->getIdCmsSlot();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     *
+     * @return \Generated\Shared\Transfer\StoreTransfer[]
+     */
+    protected function getStoreTransfersByStoreNames(AssetExternalTransfer $assetExternalTransfer): array
+    {
+        return $this->storeFacade->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
     }
 }

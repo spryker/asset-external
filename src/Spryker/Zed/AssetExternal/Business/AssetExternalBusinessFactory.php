@@ -7,8 +7,11 @@
 
 namespace Spryker\Zed\AssetExternal\Business;
 
+use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
 use Spryker\Zed\AssetExternal\Business\Model\AssetExternalHandler;
 use Spryker\Zed\AssetExternal\Business\Model\AssetExternalHandlerInterface;
+use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
+use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
 /**
@@ -24,9 +27,27 @@ class AssetExternalBusinessFactory extends AbstractBusinessFactory
     public function createAssetExternalHandler(): AssetExternalHandlerInterface
     {
         return new AssetExternalHandler(
+            $this->getStoreFacade(),
+            $this->getCmsSlotStoreFacade(),
             $this->getEntityManager(),
             $this->getRepository(),
             $this->getConfig()
         );
+    }
+
+    /**
+     * @return \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface
+     */
+    public function getStoreFacade(): AssetExternalToStoreBridgeInterface
+    {
+        return $this->getProvidedDependency(AssetExternalDependencyProvider::FACADE_STORE);
+    }
+
+    /**
+     * @return \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface
+     */
+    public function getCmsSlotStoreFacade(): AssetExternalToCmsSlotFacadeBridgeInterface
+    {
+        return $this->getProvidedDependency(AssetExternalDependencyProvider::FACADE_CMS_SLOT);
     }
 }

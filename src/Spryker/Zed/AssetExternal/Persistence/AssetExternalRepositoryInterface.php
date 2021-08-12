@@ -17,11 +17,4 @@ interface AssetExternalRepositoryInterface
      * @return \Generated\Shared\Transfer\AssetExternalTransfer|null
      */
     public function findAssetExternalByAssetUuid(string $assetUuid): ?AssetExternalTransfer;
-
-    /**
-     * @param string $key
-     *
-     * @return int|null
-     */
-    public function findIdCmsSlotByKey(string $key): ?int;
 }

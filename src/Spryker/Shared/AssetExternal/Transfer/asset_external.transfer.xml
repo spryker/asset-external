@@ -35,4 +35,7 @@
         <property name="assetUuid" type="string"/>
         <property name="stores" type="string[]" singular="store"/>
     </transfer>
+
+    <transfer name="Store">
+    </transfer>
 </transfers>
