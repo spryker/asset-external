@@ -16,11 +16,10 @@ interface AssetExternalFacadeInterface
 {
     /**
      * Specification:
-     * - Creates a new asset external entity.
+     * - Creates a new asset external entity and a new relations assetExternalStoreEntity.
      * - Uses incoming transfer to set entity fields.
      * - Persists the entity to DB.
      * - Sets ID to the returning transfer.
-     * - Creates a new relations assetExternalStoreEntity.
      * - Returns asset external response with newly created asset external transfer inside.
      * - Throws InvalidAssetExternalException in case a record is found.
      *

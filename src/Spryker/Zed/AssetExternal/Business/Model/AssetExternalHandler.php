@@ -72,7 +72,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->findAssetExternalByAssetUuid((string)$assetAddedMessageTransfer->getAssetUuid());
 
         if ($assetExternalTransfer !== null) {
-            throw new InvalidAssetExternalException('This asset already exist in DB.');
+            throw new InvalidAssetExternalException('This asset already exists in DB.');
         }
 
         $idCmsSlot = $this->getIdCmsSlotByKey((string)$assetAddedMessageTransfer->getSlotKey());
@@ -109,7 +109,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->findAssetExternalByAssetUuid((string)$assetUpdatedMessageTransfer->getAssetUuid());
 
         if ($assetExternalTransfer === null) {
-            throw new InvalidAssetExternalException('This asset not exist in DB.');
+            throw new InvalidAssetExternalException('This asset doesn\'t exist in DB.');
         }
 
         $idCmsSlot = $this->getIdCmsSlotByKey((string)$assetUpdatedMessageTransfer->getSlotKey());
@@ -168,7 +168,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     protected function getIdCmsSlotByKey(string $key): int
     {
         $cmsSlotKeyId = $this->assetExternalRepository
-            ->getIdCmsSlotByKey($key);
+            ->findIdCmsSlotByKey($key);
 
         if ($cmsSlotKeyId === null) {
             throw new InvalidAssetExternalException('This asset has invalid cms slot key.');

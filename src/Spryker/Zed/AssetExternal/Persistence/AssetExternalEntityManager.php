@@ -94,7 +94,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
      */
     protected function saveAssetExternalStore(int $fkAssetExternal, string $storeName): void
     {
-        $storeEntity = $this->getFactory()->createStoreQuery()->findOneByName($storeName);
+        $storeEntity = $this->getFactory()->getStorePropelQuery()->findOneByName($storeName);
 
         if ($storeEntity !== null) {
             $assetExternalStoreEntity = $this->getFactory()

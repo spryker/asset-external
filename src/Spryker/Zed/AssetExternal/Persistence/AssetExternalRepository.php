@@ -55,9 +55,9 @@ class AssetExternalRepository extends AbstractRepository implements AssetExterna
      *
      * @return int|null
      */
-    public function getIdCmsSlotByKey(string $key): ?int
+    public function findIdCmsSlotByKey(string $key): ?int
     {
-        $cmsSlot = $this->getFactory()->createCmsSlotQuery()->findOneByKey($key);
+        $cmsSlot = $this->getFactory()->getCmsSlotPropelQuery()->findOneByKey($key);
 
         return $cmsSlot ? $cmsSlot->getIdCmsSlot() : null;
     }

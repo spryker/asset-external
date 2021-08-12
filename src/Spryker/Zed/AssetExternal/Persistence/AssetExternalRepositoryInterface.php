@@ -23,5 +23,5 @@ interface AssetExternalRepositoryInterface
      *
      * @return int|null
      */
-    public function getIdCmsSlotByKey(string $key): ?int;
+    public function findIdCmsSlotByKey(string $key): ?int;
 }
