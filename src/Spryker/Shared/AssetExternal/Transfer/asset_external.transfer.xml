@@ -41,6 +41,6 @@
     </transfer>
 
     <transfer name="CmsSlotCriteria">
-        <property name="keys" type="string[]"/>
+        <property name="keys" type="string[]" singular="key"/>
     </transfer>
 </transfers>
