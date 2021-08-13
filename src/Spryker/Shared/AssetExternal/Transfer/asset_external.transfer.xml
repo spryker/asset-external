@@ -37,5 +37,10 @@
     </transfer>
 
     <transfer name="Store">
+        <property name="idStore" type="int"/>
+    </transfer>
+
+    <transfer name="CmsSlotCriteria">
+        <property name="keys" type="string[]"/>
     </transfer>
 </transfers>

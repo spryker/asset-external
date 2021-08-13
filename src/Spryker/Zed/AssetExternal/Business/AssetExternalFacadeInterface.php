@@ -16,7 +16,7 @@ interface AssetExternalFacadeInterface
 {
     /**
      * Specification:
-     * - Creates a new asset external entity and a new relations assetExternalStoreEntity.
+     * - Creates a new asset external entity with new assetExternalStoreEntity relations.
      * - Uses incoming transfer to set entity fields.
      * - Persists the entity to DB.
      * - Sets ID to the returning transfer.
