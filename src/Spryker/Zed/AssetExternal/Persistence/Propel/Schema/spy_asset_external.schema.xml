@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="zed" xsi:noNamespaceSchemaLocation="http://static.spryker.com/schema-01.xsd" namespace="Orm\Zed\AssetExternal\Persistence" package="src.Orm.Zed.AssetExternal.Persistence">
+
+    <table name="spy_asset_external" identifierQuoting="true">
+        <column name="id_asset_external" required="true" type="INTEGER" autoIncrement="true" primaryKey="true"/>
+        <column name="fk_cms_slot" required="true" type="INTEGER"/>
+        <column name="asset_uuid" required="true" type="VARCHAR" size="36"/>
+        <column name="asset_name" required="true" type="VARCHAR" size="255"/>
+        <column name="asset_content" required="true" type="LONGVARCHAR"/>
+
+        <foreign-key name="spy_asset_external-fk_cms_slot" foreignTable="spy_cms_slot">
+            <reference local="fk_cms_slot" foreign="id_cms_slot"/>
+        </foreign-key>
+
+        <unique name="spy_asset_external-unique-asset_uuid">
+            <unique-column name="asset_uuid"/>
+        </unique>
+    </table>
+
+    <table name="spy_asset_external_store" identifierQuoting="true">
+        <column name="id_asset_external_store" required="true" type="INTEGER" autoIncrement="true" primaryKey="true"/>
+        <column name="fk_asset_external" required="true" type="INTEGER"/>
+        <column name="fk_store" required="true" type="INTEGER"/>
+
+        <foreign-key name="spy_asset_external_store-fk_asset_external" foreignTable="spy_asset_external">
+            <reference local="fk_asset_external" foreign="id_asset_external"/>
+        </foreign-key>
+
+        <foreign-key name="spy_asset_external_store-fk_store" foreignTable="spy_store">
+            <reference local="fk_store" foreign="id_store"/>
+        </foreign-key>
+
+        <unique name="spy_asset_external_store-unique-fk_block-fk_store">
+            <unique-column name="fk_asset_external"/>
+            <unique-column name="fk_store"/>
+        </unique>
+    </table>
+</database>

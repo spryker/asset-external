@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
+ */
+
+namespace Spryker\Zed\AssetExternal\Persistence;
+
+use Generated\Shared\Transfer\AssetExternalTransfer;
+use Spryker\Zed\Kernel\Persistence\AbstractRepository;
+use Spryker\Zed\PropelOrm\Business\Runtime\ActiveQuery\Criteria;
+
+/**
+ * @method \Spryker\Zed\AssetExternal\Persistence\AssetExternalPersistenceFactory getFactory()
+ */
+class AssetExternalRepository extends AbstractRepository implements AssetExternalRepositoryInterface
+{
+    /**
+     * @param string $assetUuid
+     *
+     * @return \Generated\Shared\Transfer\AssetExternalTransfer|null
+     */
+    public function findAssetExternalByAssetUuid(string $assetUuid): ?AssetExternalTransfer
+    {
+        $assetExternalEntity = $this->getFactory()
+            ->createAssetExternalQuery()
+            ->filterByAssetUuid($assetUuid)
+            ->findOne();
+
+        if (empty($assetExternalEntity)) {
+            return null;
+        }
+
+        /** @var \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer */
+        $assetExternalTransfer = $this->getFactory()
+            ->createAssetExternalMapper()
+            ->mapAssetExternalEntityToAssetExternalTransfer($assetExternalEntity);
+
+        $assetExternalStoreEntities = $this->getFactory()
+            ->createAssetExternalStoreQuery()
+            ->joinWithSpyStore(Criteria::LEFT_JOIN)
+            ->filterByFkAssetExternal($assetExternalEntity->getIdAssetExternal())
+            ->find();
+
+        foreach ($assetExternalStoreEntities as $assetExternalStoreEntity) {
+            $assetExternalTransfer->addStore((string)$assetExternalStoreEntity->getSpyStore()->getName());
+        }
+
+        return $assetExternalTransfer;
+    }
+}
