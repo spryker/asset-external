@@ -10,7 +10,10 @@ namespace SprykerTest\Shared\AssetExternal\Helper;
 use Codeception\Module;
 use Generated\Shared\DataBuilder\AssetAddedMessageBuilder;
 use Generated\Shared\Transfer\AssetExternalTransfer;
+use Orm\Zed\AssetExternal\Persistence\SpyAssetExternal;
 use Orm\Zed\AssetExternal\Persistence\SpyAssetExternalQuery;
+use Orm\Zed\AssetExternal\Persistence\SpyAssetExternalStoreQuery;
+use Orm\Zed\Category\Persistence\SpyCategoryStoreQuery;
 use Spryker\Zed\AssetExternal\Business\AssetExternalBusinessFactory;
 use SprykerTest\Shared\Testify\Helper\DataCleanupHelperTrait;
 use SprykerTest\Shared\Testify\Helper\LocatorHelperTrait;
@@ -22,25 +25,58 @@ class AssetExternalDataHelper extends Module
     use LocatorHelperTrait;
 
     /**
-     * @param array $assetAddedMessageOverride
+     * @param string $uuid
+     * @param string $content
+     * @param int $cmsSlotId
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function haveAssetExternal(array $assetAddedMessageOverride = []): AssetExternalTransfer
+    public function haveAssetExternal(string $uuid, string $content, int $cmsSlotId, string $name): AssetExternalTransfer
     {
-        $assetAddedMessageTransfer = (new AssetAddedMessageBuilder($assetAddedMessageOverride))->build();
+        $assetExternalEntity = SpyAssetExternalQuery::create()
+            ->filterByAssetUuid($uuid)
+            ->findOneOrCreate();
 
-        /** @var \Spryker\Zed\AssetExternal\Business\AssetExternalFacade $assetExternalFacade */
-        $assetExternalFacade = $this->getLocator()->assetExternal()->facade();
-        $assetExternalFacade->setFactory((new AssetExternalBusinessFactory())->setConfig((new AssetExternalConfigMock())));
-        $assetExternalTransfer = $assetExternalFacade->addAsset($assetAddedMessageTransfer);
+        if ($assetExternalEntity->isNew()) {
+            $assetExternalEntity = (new SpyAssetExternal())
+                ->setFkCmsSlot($cmsSlotId)
+                ->setAssetContent($content)
+                ->setAssetUuid($uuid)
+                ->setAssetName($name);
 
-        $this->getDataCleanupHelper()->_addCleanup(function () use ($assetExternalTransfer): void {
+            $assetExternalEntity->save();
+        }
+
+        $this->getDataCleanupHelper()->_addCleanup(function () use ($assetExternalEntity): void {
             (new SpyAssetExternalQuery())
-                ->findByIdAssetExternal($assetExternalTransfer->getIdAssetExternal())
+                ->findByIdAssetExternal($assetExternalEntity->getIdAssetExternal())
                 ->delete();
         });
 
-        return $assetExternalTransfer;
+        return (new AssetExternalTransfer())->fromArray($assetExternalEntity->toArray(), true);
+    }
+
+    /**
+     * @param int $idAssetExternal
+     * @param int $idStore
+     *
+     * @return void
+     */
+    public function haveAssetExternalStoreRelation(int $idAssetExternal, int $idStore): void
+    {
+        $assetExternalStoreEntity = SpyAssetExternalStoreQuery::create()
+            ->filterByFkAssetExternal($idAssetExternal)
+            ->filterByFkStore($idStore)
+            ->findOneOrCreate();
+
+        if ($assetExternalStoreEntity->isNew()) {
+            $assetExternalStoreEntity->save();
+        }
+
+        $this->getDataCleanupHelper()->_addCleanup(function () use ($assetExternalStoreEntity): void {
+            (new SpyAssetExternalStoreQuery())
+                ->findByIdAssetExternalStore($assetExternalStoreEntity->getIdAssetExternalStore())
+                ->delete();
+        });
     }
 }
