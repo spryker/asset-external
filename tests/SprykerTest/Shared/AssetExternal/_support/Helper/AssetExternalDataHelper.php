@@ -17,7 +17,6 @@ use Orm\Zed\Category\Persistence\SpyCategoryStoreQuery;
 use Spryker\Zed\AssetExternal\Business\AssetExternalBusinessFactory;
 use SprykerTest\Shared\Testify\Helper\DataCleanupHelperTrait;
 use SprykerTest\Shared\Testify\Helper\LocatorHelperTrait;
-use SprykerTest\Zed\AssetExternal\AssetExternalConfigMock;
 
 class AssetExternalDataHelper extends Module
 {
