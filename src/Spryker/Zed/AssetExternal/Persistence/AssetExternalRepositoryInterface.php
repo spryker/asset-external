@@ -17,4 +17,11 @@ interface AssetExternalRepositoryInterface
      * @return \Generated\Shared\Transfer\AssetExternalTransfer|null
      */
     public function findAssetExternalByAssetUuid(string $assetUuid): ?AssetExternalTransfer;
+
+    /**
+     * @param int $idAssetExternal
+     *
+     * @return \Generated\Shared\Transfer\AssetExternalTransfer|null
+     */
+    public function findAssetExternalById(int $idAssetExternal): ?AssetExternalTransfer;
 }

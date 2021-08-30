@@ -8,6 +8,7 @@
 namespace Spryker\Zed\AssetExternal\Persistence;
 
 use Generated\Shared\Transfer\AssetExternalTransfer;
+use Orm\Zed\AssetExternal\Persistence\SpyAssetExternal;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 use Spryker\Zed\PropelOrm\Business\Runtime\ActiveQuery\Criteria;
 
@@ -32,6 +33,39 @@ class AssetExternalRepository extends AbstractRepository implements AssetExterna
             return null;
         }
 
+        return $this->getAssetExternalTransfer($assetExternalEntity);
+    }
+
+    /**
+     * @param int $idAssetExternal
+     *
+     * @return \Generated\Shared\Transfer\AssetExternalTransfer|null
+     */
+    public function findAssetExternalById(int $idAssetExternal): ?AssetExternalTransfer
+    {
+        $assetExternalEntity = $this->getFactory()
+            ->createAssetExternalQuery()
+            ->filterByIdAssetExternal($idAssetExternal)
+            ->findOne();
+
+        if (empty($assetExternalEntity)) {
+
+            return null;
+        }
+
+        return $this->getAssetExternalTransfer($assetExternalEntity);
+    }
+
+    /**
+     * @param \Orm\Zed\AssetExternal\Persistence\SpyAssetExternal $assetExternalEntity
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     * @throws \Spryker\Zed\Propel\Business\Exception\AmbiguousComparisonException
+     *
+     * @return \Generated\Shared\Transfer\AssetExternalTransfer
+     */
+    protected function getAssetExternalTransfer(SpyAssetExternal $assetExternalEntity): AssetExternalTransfer
+    {
         /** @var \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer */
         $assetExternalTransfer = $this->getFactory()
             ->createAssetExternalMapper()

@@ -60,4 +60,17 @@ interface AssetExternalFacadeInterface
      * @return void
      */
     public function deleteAsset(AssetDeletedMessageTransfer $assetDeletedMessageTransfer): void;
+
+    /**
+     * Specification:
+     * - Gets asset external from the database.
+     * - Returns AssetExternalTransfer if asset exernal entity exists. Otherwise returns null.
+     *
+     * @api
+     *
+     * @param int $idAssetExternal
+     *
+     * @return \Generated\Shared\Transfer\AssetExternalTransfer|null
+     */
+    public function findAssetById(int $idAssetExternal): ?AssetExternalTransfer;
 }

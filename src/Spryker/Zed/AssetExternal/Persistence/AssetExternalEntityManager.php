@@ -50,6 +50,36 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     *
+     * @return \Generated\Shared\Transfer\AssetExternalTransfer
+     */
+    public function saveAssetExternal(AssetExternalTransfer $assetExternalTransfer): AssetExternalTransfer
+    {
+        $assetExternalTransfer->requireAssetUuid()
+            ->requireAssetName()
+            ->requireAssetContent()
+            ->requireIdCmsSlot()
+            ->requireStores();
+
+        $assetExternalEntity = $this->getFactory()
+            ->createAssetExternalQuery()
+            ->filterByAssetUuid($assetExternalTransfer->getAssetUuid())
+            ->findOneOrCreate();
+
+        $assetExternalEntity = $assetExternalEntity->setAssetUuid((string)$assetExternalTransfer->getAssetUuid())
+            ->setAssetContent((string)$assetExternalTransfer->getAssetContent())
+            ->setAssetName((string)$assetExternalTransfer->getAssetName())
+            ->setFkCmsSlot((int)$assetExternalTransfer->getIdCmsSlot());
+
+        $assetExternalEntity->save();
+
+        $assetExternalTransfer->setIdAssetExternal($assetExternalEntity->getIdAssetExternal());
+
+        return $assetExternalTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
      * @param \Generated\Shared\Transfer\StoreTransfer[] $storeTransfers
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer

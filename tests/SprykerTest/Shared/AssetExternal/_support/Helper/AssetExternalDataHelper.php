@@ -15,6 +15,9 @@ use Orm\Zed\AssetExternal\Persistence\SpyAssetExternalQuery;
 use Orm\Zed\AssetExternal\Persistence\SpyAssetExternalStoreQuery;
 use Orm\Zed\Category\Persistence\SpyCategoryStoreQuery;
 use Spryker\Zed\AssetExternal\Business\AssetExternalBusinessFactory;
+use Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManager;
+use Spryker\Zed\AssetExternal\Persistence\AssetExternalRepository;
+use Spryker\Zed\AssetExternalStorage\Persistence\AssetExternalStoragePersistenceFactory;
 use SprykerTest\Shared\Testify\Helper\DataCleanupHelperTrait;
 use SprykerTest\Shared\Testify\Helper\LocatorHelperTrait;
 
@@ -52,7 +55,10 @@ class AssetExternalDataHelper extends Module
                 ->delete();
         });
 
-        return (new AssetExternalTransfer())->fromArray($assetExternalEntity->toArray(), true);
+        $assetExternalTransfer = (new AssetExternalTransfer())->fromArray($assetExternalEntity->toArray(), true);
+        $assetExternalTransfer->setIdCmsSlot($assetExternalEntity->getFkCmsSlot());
+
+        return $assetExternalTransfer;
     }
 
     /**
@@ -77,5 +83,21 @@ class AssetExternalDataHelper extends Module
                 ->findByIdAssetExternalStore($assetExternalStoreEntity->getIdAssetExternalStore())
                 ->delete();
         });
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     */
+    public function deleteAssetExternal(AssetExternalTransfer $assetExternalTransfer): void
+    {
+        $assetExternalEntity = (new AssetExternalEntityManager())->deleteAssetExternal($assetExternalTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     */
+    public function updateAssetExternal(AssetExternalTransfer $assetExternalTransfer): void
+    {
+        $assetExternalEntity = (new AssetExternalEntityManager())->saveAssetExternal($assetExternalTransfer);
     }
 }

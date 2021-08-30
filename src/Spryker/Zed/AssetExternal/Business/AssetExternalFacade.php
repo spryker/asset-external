@@ -61,4 +61,14 @@ class AssetExternalFacade extends AbstractFacade implements AssetExternalFacadeI
     {
         $this->getFactory()->createAssetExternalHandler()->deleteAsset($assetDeletedMessageTransfer);
     }
+
+    /**
+     * @param int $idAssetExternal
+     *
+     * @return \Generated\Shared\Transfer\AssetExternalTransfer|null
+     */
+    public function findAssetById(int $idAssetExternal): ?AssetExternalTransfer
+    {
+        return $this->getRepository()->findAssetExternalById($idAssetExternal);
+    }
 }
