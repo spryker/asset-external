@@ -8,7 +8,6 @@
 namespace SprykerTest\Shared\AssetExternal\Helper;
 
 use Codeception\Module;
-use Generated\Shared\DataBuilder\AssetAddedMessageBuilder;
 use Generated\Shared\Transfer\AssetExternalTransfer;
 use Orm\Zed\AssetExternal\Persistence\SpyAssetExternal;
 use Orm\Zed\AssetExternal\Persistence\SpyAssetExternalQuery;
