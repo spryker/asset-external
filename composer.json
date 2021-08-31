@@ -7,12 +7,18 @@
         "php": ">=7.3",
         "spryker/cms-slot": "^1.0.0",
         "spryker/kernel": "^3.30.0",
-        "spryker/store": "^1.15.0",
-        "spryker/transfer": "^3.25.0"
+        "spryker/propel-orm": "^1.0.0",
+        "spryker/store": "^1.15.0"
     },
     "require-dev": {
         "spryker/code-sniffer": "*",
+        "spryker/event": "*",
+        "spryker/propel": "*",
+        "spryker/ramsey-uuid": "*",
         "spryker/testify": "*"
+    },
+    "suggest": {
+        "spryker/event": "If you want to use Event plugins, minimum required version: 2.1.0"
     },
     "autoload": {
         "psr-4": {
