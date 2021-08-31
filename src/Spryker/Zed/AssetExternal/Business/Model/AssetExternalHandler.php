@@ -192,7 +192,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     protected function getIdCmsSlotByKey(string $key): int
     {
         try {
-            $cmsSlotTransfer = $this->cmsSlotFacade->getCmsSlot((new CmsSlotCriteriaTransfer())->addKeys($key));
+            $cmsSlotTransfer = $this->cmsSlotFacade->getCmsSlot((new CmsSlotCriteriaTransfer())->addKey($key));
         } catch (MissingCmsSlotException $exception) {
             throw new InvalidAssetExternalException(
                 'This asset has invalid cms slot key.',
