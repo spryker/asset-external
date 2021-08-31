@@ -49,7 +49,6 @@ class AssetExternalRepository extends AbstractRepository implements AssetExterna
             ->findOne();
 
         if (empty($assetExternalEntity)) {
-
             return null;
         }
 
@@ -58,9 +57,6 @@ class AssetExternalRepository extends AbstractRepository implements AssetExterna
 
     /**
      * @param \Orm\Zed\AssetExternal\Persistence\SpyAssetExternal $assetExternalEntity
-     *
-     * @throws \Propel\Runtime\Exception\PropelException
-     * @throws \Spryker\Zed\Propel\Business\Exception\AmbiguousComparisonException
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */

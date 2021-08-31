@@ -63,6 +63,10 @@ class AssetExternalFacade extends AbstractFacade implements AssetExternalFacadeI
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
      * @param int $idAssetExternal
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer|null

@@ -12,11 +12,7 @@ use Generated\Shared\Transfer\AssetExternalTransfer;
 use Orm\Zed\AssetExternal\Persistence\SpyAssetExternal;
 use Orm\Zed\AssetExternal\Persistence\SpyAssetExternalQuery;
 use Orm\Zed\AssetExternal\Persistence\SpyAssetExternalStoreQuery;
-use Orm\Zed\Category\Persistence\SpyCategoryStoreQuery;
-use Spryker\Zed\AssetExternal\Business\AssetExternalBusinessFactory;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManager;
-use Spryker\Zed\AssetExternal\Persistence\AssetExternalRepository;
-use Spryker\Zed\AssetExternalStorage\Persistence\AssetExternalStoragePersistenceFactory;
 use SprykerTest\Shared\Testify\Helper\DataCleanupHelperTrait;
 use SprykerTest\Shared\Testify\Helper\LocatorHelperTrait;
 
@@ -86,6 +82,8 @@ class AssetExternalDataHelper extends Module
 
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     *
+     * @return void
      */
     public function deleteAssetExternal(AssetExternalTransfer $assetExternalTransfer): void
     {
@@ -94,6 +92,8 @@ class AssetExternalDataHelper extends Module
 
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     *
+     * @return void
      */
     public function updateAssetExternal(AssetExternalTransfer $assetExternalTransfer): void
     {
