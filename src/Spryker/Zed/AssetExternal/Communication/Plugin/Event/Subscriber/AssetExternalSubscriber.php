@@ -10,6 +10,7 @@ namespace Spryker\Zed\AssetExternal\Communication\Plugin\Event\Subscriber;
 use Spryker\Zed\AssetExternal\Communication\Plugin\Event\Listener\AssetExternalAddListenerPlugin;
 use Spryker\Zed\AssetExternal\Communication\Plugin\Event\Listener\AssetExternalDeleteListenerPlugin;
 use Spryker\Zed\AssetExternal\Communication\Plugin\Event\Listener\AssetExternalUpdateListenerPlugin;
+use Spryker\Zed\AssetExternal\Dependency\AssetExternalEvents;
 use Spryker\Zed\Event\Dependency\EventCollectionInterface;
 use Spryker\Zed\Event\Dependency\Plugin\EventSubscriberInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
@@ -21,10 +22,6 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
  */
 class AssetExternalSubscriber extends AbstractPlugin implements EventSubscriberInterface
 {
-    protected const EVENT_SCRIPT_ADDED = 'Script.Added';
-    protected const EVENT_SCRIPT_UPDATED = 'Script.Updated';
-    protected const EVENT_SCRIPT_DELETED = 'Script.Deleted';
-
     /**
      * {@inheritDoc}
      * - Adds listeners for external asserts handling
@@ -49,8 +46,8 @@ class AssetExternalSubscriber extends AbstractPlugin implements EventSubscriberI
      */
     protected function addAssetEventListener(EventCollectionInterface $eventCollection): void
     {
-        $eventCollection->addListener(static::EVENT_SCRIPT_ADDED, new AssetExternalAddListenerPlugin());
-        $eventCollection->addListener(static::EVENT_SCRIPT_UPDATED, new AssetExternalUpdateListenerPlugin());
-        $eventCollection->addListener(static::EVENT_SCRIPT_DELETED, new AssetExternalDeleteListenerPlugin());
+        $eventCollection->addListener(AssetExternalEvents::EVENT_SCRIPT_ADDED, new AssetExternalAddListenerPlugin());
+        $eventCollection->addListener(AssetExternalEvents::EVENT_SCRIPT_UPDATED, new AssetExternalUpdateListenerPlugin());
+        $eventCollection->addListener(AssetExternalEvents::EVENT_SCRIPT_DELETED, new AssetExternalDeleteListenerPlugin());
     }
 }
