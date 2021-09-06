@@ -8,7 +8,6 @@
 namespace Spryker\Zed\AssetExternal\Persistence;
 
 use Generated\Shared\Transfer\AssetExternalTransfer;
-use Orm\Zed\PayoneConfig\Persistence\Map\SpyAssetExternalStoreTableMap;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
 
@@ -147,7 +146,8 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
     /**
      * @param int[] $storeTransferIds
-     * @throws \Spryker\Zed\Propel\Business\Exception\AmbiguousComparisonException
+     *
+     * @return void
      */
     protected function deleteStoresNotInStoreIdList(array $storeTransferIds): void
     {
