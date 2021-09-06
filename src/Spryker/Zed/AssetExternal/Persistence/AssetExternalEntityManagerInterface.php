@@ -17,7 +17,7 @@ interface AssetExternalEntityManagerInterface
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function saveAssetExternalAssetExternalWithAssetExternalStore(
+    public function saveAssetExternalAssetExternalWithAssetExternalStores(
         AssetExternalTransfer $assetExternalTransfer,
         array $storeTransfers
     ): AssetExternalTransfer;

@@ -106,7 +106,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
         $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer);
 
         return $this->assetExternalEntityManager
-            ->saveAssetExternalAssetExternalWithAssetExternalStore($assetExternalTransfer, $storeTransfers);
+            ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, $storeTransfers);
     }
 
     /**
@@ -136,14 +136,15 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
 
         $idCmsSlot = $this->getIdCmsSlotByKey((string)$assetUpdatedMessageTransfer->getSlotKey());
 
-        $assetExternalTransfer->setAssetContent($assetUpdatedMessageTransfer->getAssetContent())
+        $assetExternalTransfer
+            ->setAssetContent($assetUpdatedMessageTransfer->getAssetContent())
             ->setIdCmsSlot($idCmsSlot)
             ->setStores($assetUpdatedMessageTransfer->getStores());
 
         $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer);
 
         return $this->assetExternalEntityManager
-            ->saveAssetExternalAssetExternalWithAssetExternalStore($assetExternalTransfer, $storeTransfers);
+            ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, $storeTransfers);
     }
 
     /**

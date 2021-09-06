@@ -8,6 +8,8 @@
 namespace Spryker\Zed\AssetExternal\Persistence;
 
 use Generated\Shared\Transfer\AssetExternalTransfer;
+use Orm\Zed\PayoneConfig\Persistence\Map\SpyAssetExternalStoreTableMap;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
 
 /**
@@ -21,7 +23,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function saveAssetExternalAssetExternalWithAssetExternalStore(
+    public function saveAssetExternalAssetExternalWithAssetExternalStores(
         AssetExternalTransfer $assetExternalTransfer,
         array $storeTransfers
     ): AssetExternalTransfer {
@@ -90,12 +92,16 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
     ): AssetExternalTransfer {
         $assetExternalTransfer->requireIdAssetExternal()->requireStores();
 
+        $storeTransferIds = [];
         foreach ($storeTransfers as $storeTransfer) {
             $this->saveAssetExternalStore(
                 (int)$assetExternalTransfer->getIdAssetExternal(),
                 (int)$storeTransfer->getIdStore()
             );
+
+            $storeTransferIds[] = $storeTransfer->getIdStore();
         }
+        $this->deleteStoresNotInStoreIdList($storeTransferIds);
 
         return $assetExternalTransfer;
     }
@@ -137,5 +143,17 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
         $assetExternalStoreEntity->setFkAssetExternal($fkAssetExternal)->setFkStore($fkStore);
         $assetExternalStoreEntity->save();
+    }
+
+    /**
+     * @param int[] $storeTransferIds
+     * @throws \Spryker\Zed\Propel\Business\Exception\AmbiguousComparisonException
+     */
+    protected function deleteStoresNotInStoreIdList(array $storeTransferIds): void
+    {
+        $this->getFactory()->createAssetExternalStoreQuery()
+            ->filterByFkStore($storeTransferIds, Criteria::NOT_IN)
+            ->find()
+            ->delete();
     }
 }
