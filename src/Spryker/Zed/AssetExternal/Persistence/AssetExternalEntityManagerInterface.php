@@ -35,4 +35,12 @@ interface AssetExternalEntityManagerInterface
      * @return void
      */
     public function deleteAssetExternal(AssetExternalTransfer $assetExternalTransfer): void;
+
+    /**
+     * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     * @param \Generated\Shared\Transfer\StoreTransfer[] $storeTransfers
+     *
+     * @return void
+     */
+    public function deleteAssetExternalStores(AssetExternalTransfer $assetExternalTransfer, array $storeTransfers): void;
 }

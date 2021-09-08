@@ -100,7 +100,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
             $storeTransferIds[] = $storeTransfer->getIdStore();
         }
-        $this->deleteStoresNotInStoreIdList($storeTransferIds);
+        $this->deleteStoresNotInStoreIdList($storeTransferIds, $assetExternalTransfer->getIdAssetExternal());
 
         return $assetExternalTransfer;
     }
@@ -145,13 +145,37 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
     }
 
     /**
-     * @param int[] $storeTransferIds
+     * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     * @param \Generated\Shared\Transfer\StoreTransfer[] $storeTransfers
      *
      * @return void
      */
-    protected function deleteStoresNotInStoreIdList(array $storeTransferIds): void
+    public function deleteAssetExternalStores(AssetExternalTransfer $assetExternalTransfer, array $storeTransfers): void
+    {
+        $assetExternalTransfer->requireIdAssetExternal()->requireStores();
+
+        $storeIds = [];
+        foreach ($storeTransfers as $store) {
+            $storeIds[] = $store->getIdStore();
+        }
+
+        $this->getFactory()->createAssetExternalStoreQuery()
+            ->filterByFkAssetExternal($assetExternalTransfer->getIdAssetExternal())
+            ->filterByFkStore_In($storeIds)
+            ->find()
+            ->delete();
+    }
+
+    /**
+     * @param int[] $storeTransferIds
+     * @param int $idAssetExternal
+     *
+     * @return void
+     */
+    protected function deleteStoresNotInStoreIdList(array $storeTransferIds, int $idAssetExternal): void
     {
         $this->getFactory()->createAssetExternalStoreQuery()
+            ->filterByFkAssetExternal($idAssetExternal)
             ->filterByFkStore($storeTransferIds, Criteria::NOT_IN)
             ->find()
             ->delete();
