@@ -103,10 +103,10 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->setIdCmsSlot($idCmsSlot)
             ->setStores($assetAddedMessageTransfer->getStores());
 
-        $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer);
+        $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
 
         return $this->assetExternalEntityManager
-            ->saveAssetExternalAssetExternalWithAssetExternalStore($assetExternalTransfer, $storeTransfers);
+            ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, $storeTransfers);
     }
 
     /**
@@ -136,14 +136,15 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
 
         $idCmsSlot = $this->getIdCmsSlotByKey((string)$assetUpdatedMessageTransfer->getSlotKey());
 
-        $assetExternalTransfer->setAssetContent($assetUpdatedMessageTransfer->getAssetContent())
+        $assetExternalTransfer
+            ->setAssetContent($assetUpdatedMessageTransfer->getAssetContent())
             ->setIdCmsSlot($idCmsSlot)
             ->setStores($assetUpdatedMessageTransfer->getStores());
 
-        $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer);
+        $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
 
         return $this->assetExternalEntityManager
-            ->saveAssetExternalAssetExternalWithAssetExternalStore($assetExternalTransfer, $storeTransfers);
+            ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, $storeTransfers);
     }
 
     /**
@@ -163,9 +164,20 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetDeletedMessageTransfer->getAssetUuid());
 
-        if ($assetExternalTransfer) {
-            $this->assetExternalEntityManager->deleteAssetExternal($assetExternalTransfer);
+        if (!$assetExternalTransfer) {
+            return;
         }
+
+        if (empty($assetDeletedMessageTransfer->getStores())) {
+            $this->assetExternalEntityManager->deleteAssetExternal($assetExternalTransfer);
+
+            return;
+        }
+
+        $this->assetExternalEntityManager->deleteAssetExternalStores(
+            $assetExternalTransfer,
+            $this->getStoreTransfersByStoreNames($assetDeletedMessageTransfer->getStores())
+        );
     }
 
     /**
@@ -205,12 +217,12 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     * @param string[] $storeNames
      *
      * @return \Generated\Shared\Transfer\StoreTransfer[]
      */
-    protected function getStoreTransfersByStoreNames(AssetExternalTransfer $assetExternalTransfer): array
+    protected function getStoreTransfersByStoreNames(array $storeNames): array
     {
-        return $this->storeFacade->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
+        return $this->storeFacade->getStoreTransfersByStoreNames($storeNames);
     }
 }

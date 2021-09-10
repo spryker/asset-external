@@ -25,6 +25,7 @@ class AssetExternalDataHelper extends Module
      * @param string $uuid
      * @param string $content
      * @param int $cmsSlotId
+     * @param string $name
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */

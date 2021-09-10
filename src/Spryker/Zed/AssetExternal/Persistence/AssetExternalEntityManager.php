@@ -8,6 +8,7 @@
 namespace Spryker\Zed\AssetExternal\Persistence;
 
 use Generated\Shared\Transfer\AssetExternalTransfer;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
 
 /**
@@ -21,7 +22,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function saveAssetExternalAssetExternalWithAssetExternalStore(
+    public function saveAssetExternalAssetExternalWithAssetExternalStores(
         AssetExternalTransfer $assetExternalTransfer,
         array $storeTransfers
     ): AssetExternalTransfer {
@@ -90,12 +91,16 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
     ): AssetExternalTransfer {
         $assetExternalTransfer->requireIdAssetExternal()->requireStores();
 
+        $storeTransferIds = [];
         foreach ($storeTransfers as $storeTransfer) {
             $this->saveAssetExternalStore(
                 (int)$assetExternalTransfer->getIdAssetExternal(),
                 (int)$storeTransfer->getIdStore()
             );
+
+            $storeTransferIds[] = $storeTransfer->getIdStore();
         }
+        $this->deleteStoresNotInStoreIdList($storeTransferIds, $assetExternalTransfer->getIdAssetExternal());
 
         return $assetExternalTransfer;
     }
@@ -137,5 +142,42 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
         $assetExternalStoreEntity->setFkAssetExternal($fkAssetExternal)->setFkStore($fkStore);
         $assetExternalStoreEntity->save();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     * @param \Generated\Shared\Transfer\StoreTransfer[] $storeTransfers
+     *
+     * @return void
+     */
+    public function deleteAssetExternalStores(AssetExternalTransfer $assetExternalTransfer, array $storeTransfers): void
+    {
+        $assetExternalTransfer->requireIdAssetExternal()->requireStores();
+
+        $storeIds = [];
+        foreach ($storeTransfers as $store) {
+            $storeIds[] = $store->getIdStore();
+        }
+
+        $this->getFactory()->createAssetExternalStoreQuery()
+            ->filterByFkAssetExternal($assetExternalTransfer->getIdAssetExternal())
+            ->filterByFkStore_In($storeIds)
+            ->find()
+            ->delete();
+    }
+
+    /**
+     * @param int[] $storeTransferIds
+     * @param int $idAssetExternal
+     *
+     * @return void
+     */
+    protected function deleteStoresNotInStoreIdList(array $storeTransferIds, int $idAssetExternal): void
+    {
+        $this->getFactory()->createAssetExternalStoreQuery()
+            ->filterByFkAssetExternal($idAssetExternal)
+            ->filterByFkStore($storeTransferIds, Criteria::NOT_IN)
+            ->find()
+            ->delete();
     }
 }
