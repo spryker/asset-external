@@ -19,7 +19,6 @@ use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBrid
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface;
-use Spryker\Zed\CmsSlot\Business\Exception\MissingCmsSlotException;
 
 class AssetExternalHandler implements AssetExternalHandlerInterface
 {
@@ -142,8 +141,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
         $assetExternalTransfer
             ->setAssetContent($assetUpdatedMessageTransfer->getAssetContent())
             ->setCmsSlotKey($assetUpdatedMessageTransfer->getSlotKey())
-            ->setStores($assetUpdatedMessageTransfer->getStores())
-        ;
+            ->setStores($assetUpdatedMessageTransfer->getStores());
 
         $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
 

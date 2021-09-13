@@ -7,9 +7,6 @@
 
 namespace Spryker\Zed\AssetExternal\Dependency\Facade;
 
-use Generated\Shared\Transfer\CmsSlotCriteriaTransfer;
-use Generated\Shared\Transfer\CmsSlotTransfer;
-
 interface AssetExternalToCmsSlotFacadeBridgeInterface
 {
     /**
