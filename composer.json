@@ -8,7 +8,8 @@
         "spryker/cms-slot": "dev-beta/app-store-demo",
         "spryker/kernel": "^3.30.0",
         "spryker/propel-orm": "^1.0.0",
-        "spryker/store": "^1.12.0"
+        "spryker/store": "^1.15.0",
+        "spryker/transfer": "^3.27.0"
     },
     "require-dev": {
         "spryker/code-sniffer": "*",
