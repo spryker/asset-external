@@ -29,7 +29,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
         $assetExternalTransfer->requireAssetUuid()
             ->requireAssetName()
             ->requireAssetContent()
-            ->requireIdCmsSlot()
+            ->requireCmsSlotKey()
             ->requireStores();
 
         $assetExternalEntity = $this->getFactory()
@@ -40,7 +40,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
         $assetExternalEntity = $assetExternalEntity->setAssetUuid((string)$assetExternalTransfer->getAssetUuid())
             ->setAssetContent((string)$assetExternalTransfer->getAssetContent())
             ->setAssetName((string)$assetExternalTransfer->getAssetName())
-            ->setFkCmsSlot((int)$assetExternalTransfer->getIdCmsSlot());
+            ->setCmsSlotKey((string)$assetExternalTransfer->getCmsSlotKey());
 
         $assetExternalEntity->save();
 
@@ -59,7 +59,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
         $assetExternalTransfer->requireAssetUuid()
             ->requireAssetName()
             ->requireAssetContent()
-            ->requireIdCmsSlot()
+            ->requireCmsSlotKey()
             ->requireStores();
 
         $assetExternalEntity = $this->getFactory()
@@ -70,7 +70,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
         $assetExternalEntity = $assetExternalEntity->setAssetUuid((string)$assetExternalTransfer->getAssetUuid())
             ->setAssetContent((string)$assetExternalTransfer->getAssetContent())
             ->setAssetName((string)$assetExternalTransfer->getAssetName())
-            ->setFkCmsSlot((int)$assetExternalTransfer->getIdCmsSlot());
+            ->setCmsSlotKey((int)$assetExternalTransfer->getCmsSlotKey());
 
         $assetExternalEntity->save();
 

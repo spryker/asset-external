@@ -99,7 +99,7 @@ class AssetExternalFacadeTest extends Unit
         // Arrange
         $assetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantUuid, 'slt-footer');
         $assetExternalFacade = $this->getAssetExternalFacade();
-        $expectedAssetTransfer = (new AssetExternalTransfer())->setIdCmsSlot(8)
+        $expectedAssetTransfer = (new AssetExternalTransfer())->setCmsSlotKey('slt-footer')
             ->setStores(['US', 'DE'])
             ->setAssetName('test')
             ->setAssetContent('<script>')
@@ -108,7 +108,7 @@ class AssetExternalFacadeTest extends Unit
 
         // Act
         $assetTransfer = $assetExternalFacade->addAsset($assetMessageTransfer);
-        $assetTransfer->setIdAssetExternal(1)->setIdCmsSlot(8);
+        $assetTransfer->setIdAssetExternal(1)->setCmsSlotKey('slt-footer');
 
         // Assert
         $this->assertEquals($expectedAssetTransfer, $assetTransfer);
@@ -144,7 +144,7 @@ class AssetExternalFacadeTest extends Unit
             ->setAppUuid($this->getUuid())
             ->setSlotKey('slt-footer')
             ->setStores(['US']);
-        $expectedAssetTransfer = (new AssetExternalTransfer())->setIdCmsSlot(8)
+        $expectedAssetTransfer = (new AssetExternalTransfer())->setCmsSlotKey('slt-footer')
             ->setStores(['US'])
             ->setAssetName('test')
             ->setAssetContent('<script> </script>')
@@ -155,7 +155,7 @@ class AssetExternalFacadeTest extends Unit
         $assetExternalFacade->addAsset($startAssetMessageTransfer);
 
         $assetTransfer = $assetExternalFacade->updateAsset($newAssetMessageTransfer);
-        $assetTransfer->setIdAssetExternal(1)->setIdCmsSlot(8);
+        $assetTransfer->setIdAssetExternal(1)->setCmsSlotKey('slt-footer');
 
         // Assert
         $this->assertEquals($expectedAssetTransfer, $assetTransfer);

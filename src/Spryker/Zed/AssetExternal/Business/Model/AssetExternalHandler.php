@@ -23,6 +23,8 @@ use Spryker\Zed\CmsSlot\Business\Exception\MissingCmsSlotException;
 
 class AssetExternalHandler implements AssetExternalHandlerInterface
 {
+    protected const EXPECTED_CMS_SLOT_COUNT_WITH_REQUESTED_KEY = 1;
+
     /**
      * @var \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface
      */
@@ -95,12 +97,13 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             throw new InvalidAssetExternalException('This asset already exists in DB.');
         }
 
-        $idCmsSlot = $this->getIdCmsSlotByKey((string)$assetAddedMessageTransfer->getSlotKey());
+        $this->validateCmsSlot((string)$assetAddedMessageTransfer->getSlotKey());
 
-        $assetExternalTransfer = (new AssetExternalTransfer())->setAssetUuid($assetAddedMessageTransfer->getAssetUuid())
+        $assetExternalTransfer = (new AssetExternalTransfer())
+            ->setAssetUuid($assetAddedMessageTransfer->getAssetUuid())
             ->setAssetContent($assetAddedMessageTransfer->getAssetContent())
             ->setAssetName($assetAddedMessageTransfer->getAssetName())
-            ->setIdCmsSlot($idCmsSlot)
+            ->setCmsSlotKey($assetAddedMessageTransfer->getSlotKey())
             ->setStores($assetAddedMessageTransfer->getStores());
 
         $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
@@ -134,12 +137,13 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             throw new InvalidAssetExternalException('This asset doesn\'t exist in DB.');
         }
 
-        $idCmsSlot = $this->getIdCmsSlotByKey((string)$assetUpdatedMessageTransfer->getSlotKey());
+        $this->validateCmsSlot((string)$assetUpdatedMessageTransfer->getSlotKey());
 
         $assetExternalTransfer
             ->setAssetContent($assetUpdatedMessageTransfer->getAssetContent())
-            ->setIdCmsSlot($idCmsSlot)
-            ->setStores($assetUpdatedMessageTransfer->getStores());
+            ->setCmsSlotKey($assetUpdatedMessageTransfer->getSlotKey())
+            ->setStores($assetUpdatedMessageTransfer->getStores())
+        ;
 
         $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
 
@@ -199,21 +203,19 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      *
      * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException
      *
-     * @return int
+     * @return void
      */
-    protected function getIdCmsSlotByKey(string $key): int
+    protected function validateCmsSlot(string $key): void
     {
-        try {
-            $cmsSlotTransfer = $this->cmsSlotFacade->getCmsSlot((new CmsSlotCriteriaTransfer())->addKey($key));
-        } catch (MissingCmsSlotException $exception) {
+        $cmsSlotTransfers = $this->cmsSlotFacade->getCmsSlotsByCriteria(
+            (new CmsSlotCriteriaTransfer())->addKey($key)
+        );
+
+        if (count($cmsSlotTransfers) != self::EXPECTED_CMS_SLOT_COUNT_WITH_REQUESTED_KEY) {
             throw new InvalidAssetExternalException(
-                'This asset has invalid cms slot key.',
-                $exception->getCode(),
-                $exception
+                'This asset has invalid cms slot key.'
             );
         }
-
-        return (int)$cmsSlotTransfer->getIdCmsSlot();
     }
 
     /**

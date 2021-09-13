@@ -3,13 +3,13 @@
 
     <table name="spy_asset_external" identifierQuoting="true">
         <column name="id_asset_external" required="true" type="INTEGER" autoIncrement="true" primaryKey="true"/>
-        <column name="fk_cms_slot" required="true" type="INTEGER"/>
+        <column name="cms_slot_key" required="true" type="VARCHAR" size="255"/>
         <column name="asset_uuid" required="true" type="VARCHAR" size="36"/>
         <column name="asset_name" required="true" type="VARCHAR" size="255"/>
         <column name="asset_content" required="true" type="LONGVARCHAR"/>
 
-        <foreign-key name="spy_asset_external-fk_cms_slot" foreignTable="spy_cms_slot">
-            <reference local="fk_cms_slot" foreign="id_cms_slot"/>
+        <foreign-key name="spy_asset_external-cms_slot_key" foreignTable="spy_cms_slot">
+            <reference local="cms_slot_key" foreign="key"/>
         </foreign-key>
 
         <unique name="spy_asset_external-unique-asset_uuid">

@@ -20,8 +20,6 @@ class AssetExternalMapper implements AssetExternalMapperInterface
     public function mapAssetExternalEntityToAssetExternalTransfer(
         SpyAssetExternal $assetExternalEntity
     ): AssetExternalTransfer {
-        $assetExternalTransfer = (new AssetExternalTransfer())->fromArray($assetExternalEntity->toArray(), true);
-
-        return $assetExternalTransfer->setIdCmsSlot($assetExternalEntity->getFkCmsSlot());
+        return (new AssetExternalTransfer())->fromArray($assetExternalEntity->toArray(), true);
     }
 }

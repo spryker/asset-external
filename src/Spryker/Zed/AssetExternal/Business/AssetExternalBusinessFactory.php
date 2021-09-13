@@ -28,7 +28,7 @@ class AssetExternalBusinessFactory extends AbstractBusinessFactory
     {
         return new AssetExternalHandler(
             $this->getStoreFacade(),
-            $this->getCmsSlotStoreFacade(),
+            $this->getCmsSlotFacade(),
             $this->getEntityManager(),
             $this->getRepository(),
             $this->getConfig()
@@ -46,7 +46,7 @@ class AssetExternalBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface
      */
-    public function getCmsSlotStoreFacade(): AssetExternalToCmsSlotFacadeBridgeInterface
+    public function getCmsSlotFacade(): AssetExternalToCmsSlotFacadeBridgeInterface
     {
         return $this->getProvidedDependency(AssetExternalDependencyProvider::FACADE_CMS_SLOT);
     }

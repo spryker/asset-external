@@ -5,10 +5,10 @@
     "license": "proprietary",
     "require": {
         "php": ">=7.3",
-        "spryker/cms-slot": "^1.0.0",
+        "spryker/cms-slot": "dev-beta/app-store-demo",
         "spryker/kernel": "^3.30.0",
         "spryker/propel-orm": "^1.0.0",
-        "spryker/store": "^1.15.0"
+        "spryker/store": "^1.12.0"
     },
     "require-dev": {
         "spryker/code-sniffer": "*",

@@ -15,7 +15,7 @@ interface AssetExternalToCmsSlotFacadeBridgeInterface
     /**
      * @param \Generated\Shared\Transfer\CmsSlotCriteriaTransfer $cmsSlotCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\CmsSlotTransfer
+     * @return \Generated\Shared\Transfer\CmsSlotTransfer[]
      */
-    public function getCmsSlot(CmsSlotCriteriaTransfer $cmsSlotCriteriaTransfer): CmsSlotTransfer;
+    public function getCmsSlotsByCriteria(CmsSlotCriteriaTransfer $cmsSlotCriteriaTransfer): array;
 }

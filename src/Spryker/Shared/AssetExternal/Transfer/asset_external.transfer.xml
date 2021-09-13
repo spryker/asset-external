@@ -5,7 +5,7 @@
         <property name="idAssetExternal" type="int"/>
         <property name="assetUuid" type="string"/>
         <property name="assetName" type="string"/>
-        <property name="idCmsSlot" type="int"/>
+        <property name="cmsSlotKey" type="string"/>
         <property name="assetContent" type="string"/>
         <property name="stores" type="string[]" singular="store"/>
     </transfer>

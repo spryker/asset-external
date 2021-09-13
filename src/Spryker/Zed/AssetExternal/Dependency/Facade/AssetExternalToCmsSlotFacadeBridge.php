@@ -28,10 +28,10 @@ class AssetExternalToCmsSlotFacadeBridge implements AssetExternalToCmsSlotFacade
     /**
      * @param \Generated\Shared\Transfer\CmsSlotCriteriaTransfer $cmsSlotCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\CmsSlotTransfer
+     * @return \Generated\Shared\Transfer\CmsSlotTransfer[]
      */
-    public function getCmsSlot(CmsSlotCriteriaTransfer $cmsSlotCriteriaTransfer): CmsSlotTransfer
+    public function getCmsSlotsByCriteria(CmsSlotCriteriaTransfer $cmsSlotCriteriaTransfer): array
     {
-        return $this->cmsSlotFacade->getCmsSlot($cmsSlotCriteriaTransfer);
+        return $this->cmsSlotFacade->getCmsSlotsByCriteria($cmsSlotCriteriaTransfer);
     }
 }
