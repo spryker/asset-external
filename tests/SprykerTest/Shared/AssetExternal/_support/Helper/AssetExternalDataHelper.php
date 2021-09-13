@@ -24,12 +24,12 @@ class AssetExternalDataHelper extends Module
     /**
      * @param string $uuid
      * @param string $content
-     * @param int $cmsSlotId
+     * @param string $cmsSlotKey
      * @param string $name
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function haveAssetExternal(string $uuid, string $content, int $cmsSlotId, string $name): AssetExternalTransfer
+    public function haveAssetExternal(string $uuid, string $content, string $cmsSlotKey, string $name): AssetExternalTransfer
     {
         $assetExternalEntity = SpyAssetExternalQuery::create()
             ->filterByAssetUuid($uuid)
@@ -37,7 +37,7 @@ class AssetExternalDataHelper extends Module
 
         if ($assetExternalEntity->isNew()) {
             $assetExternalEntity = (new SpyAssetExternal())
-                ->setFkCmsSlot($cmsSlotId)
+                ->setCmsSlotKey($cmsSlotKey)
                 ->setAssetContent($content)
                 ->setAssetUuid($uuid)
                 ->setAssetName($name);
@@ -52,7 +52,7 @@ class AssetExternalDataHelper extends Module
         });
 
         $assetExternalTransfer = (new AssetExternalTransfer())->fromArray($assetExternalEntity->toArray(), true);
-        $assetExternalTransfer->setIdCmsSlot($assetExternalEntity->getFkCmsSlot());
+        $assetExternalTransfer->setCmsSlotKey($assetExternalEntity->getCmsSlotKey());
 
         return $assetExternalTransfer;
     }
