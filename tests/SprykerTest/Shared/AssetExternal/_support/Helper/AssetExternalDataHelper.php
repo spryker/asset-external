@@ -94,10 +94,12 @@ class AssetExternalDataHelper extends Module
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
      *
-     * @return void
+     * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function updateAssetExternal(AssetExternalTransfer $assetExternalTransfer): void
+    public function updateAssetExternal(AssetExternalTransfer $assetExternalTransfer): AssetExternalTransfer
     {
         $assetExternalEntity = (new AssetExternalEntityManager())->saveAssetExternal($assetExternalTransfer);
+
+        return (new AssetExternalTransfer())->fromArray($assetExternalEntity->toArray());
     }
 }
