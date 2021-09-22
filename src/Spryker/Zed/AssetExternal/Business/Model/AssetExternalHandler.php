@@ -22,6 +22,9 @@ use Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface;
 
 class AssetExternalHandler implements AssetExternalHandlerInterface
 {
+    /**
+     * @var int
+     */
     protected const EXPECTED_CMS_SLOT_COUNT_WITH_REQUESTED_KEY = 1;
 
     /**

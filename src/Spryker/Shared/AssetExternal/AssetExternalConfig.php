@@ -14,5 +14,8 @@ use Spryker\Shared\Kernel\AbstractSharedConfig;
  */
 class AssetExternalConfig extends AbstractSharedConfig
 {
+    /**
+     * @var string
+     */
     public const CMS_SLOT_CONTENT_PROVIDER_TYPE = 'SprykerAssetExternal';
 }
