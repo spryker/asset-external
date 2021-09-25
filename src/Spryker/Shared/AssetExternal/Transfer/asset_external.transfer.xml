@@ -12,27 +12,27 @@
 
     <transfer name="AssetAddedMessage" strict="true">
         <property name="tenantUuid" type="string"/>
-        <property name="appUuid" type="string"/>
-        <property name="assetUuid" type="string"/>
-        <property name="assetName" type="string"/>
-        <property name="assetContent" type="string"/>
+        <property name="pbcUuid" type="string"/>
+        <property name="scriptUuid" type="string"/>
+        <property name="scriptName" type="string"/>
+        <property name="scriptView" type="string"/>
         <property name="slotKey" type="string"/>
         <property name="stores" type="string[]" singular="store"/>
     </transfer>
 
     <transfer name="AssetUpdatedMessage" strict="true">
         <property name="tenantUuid" type="string"/>
-        <property name="appUuid" type="string"/>
-        <property name="assetUuid" type="string"/>
-        <property name="assetContent" type="string"/>
+        <property name="pbcUuid" type="string"/>
+        <property name="scriptUuid" type="string"/>
+        <property name="scriptView" type="string"/>
         <property name="slotKey" type="string"/>
         <property name="stores" type="string[]" singular="store"/>
     </transfer>
 
     <transfer name="AssetDeletedMessage" strict="true">
         <property name="tenantUuid" type="string"/>
-        <property name="appUuid" type="string"/>
-        <property name="assetUuid" type="string"/>
+        <property name="pbcUuid" type="string"/>
+        <property name="scriptUuid" type="string"/>
         <property name="stores" type="string[]" singular="store"/>
     </transfer>
 
