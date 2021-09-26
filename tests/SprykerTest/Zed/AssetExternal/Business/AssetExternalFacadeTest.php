@@ -201,6 +201,25 @@ class AssetExternalFacadeTest extends Unit
         $assetExternalFacade->updateAsset($updateCheckMessageTransfer);
     }
 
+    public function testFindAssetById(): void
+    {
+        // Arrange
+        $assetUuid = \Faker\Provider\Uuid::uuid();
+        $expectedAssetExternal = $this->tester->haveAssetExternal(
+            $assetUuid,
+            'content',
+            'external-asset-header',
+            'assetName'
+        );
+
+        // Act
+        $assetExternalFacade = $this->getAssetExternalFacade();
+        $assetExternal = $assetExternalFacade->findAssetById($expectedAssetExternal->getIdAssetExternal());
+
+        // Assert
+        $this->assertEquals($expectedAssetExternal, $assetExternal);
+    }
+
     /**
      * @return \Spryker\Zed\AssetExternal\Business\AssetExternalFacadeInterface
      */
