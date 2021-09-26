@@ -79,10 +79,11 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      */
     public function addAsset(AssetAddedMessageTransfer $assetAddedMessageTransfer): AssetExternalTransfer
     {
-        $assetAddedMessageTransfer->requireAppUuid()
-            ->requireAssetContent()
-            ->requireAssetName()
-            ->requireAssetUuid()
+        $assetAddedMessageTransfer
+            ->requirePbcUuid()
+            ->requireScriptView()
+            ->requireScriptName()
+            ->requireScriptUuid()
             ->requireSlotKey()
             ->requireStores()
             ->requireTenantUuid();
@@ -90,7 +91,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
         $this->validateTenant($assetAddedMessageTransfer->getTenantUuid());
 
         $assetExternalTransfer = $this->assetExternalRepository
-            ->findAssetExternalByAssetUuid((string)$assetAddedMessageTransfer->getAssetUuid());
+            ->findAssetExternalByAssetUuid((string)$assetAddedMessageTransfer->getScriptUuid());
 
         if ($assetExternalTransfer !== null) {
             throw new InvalidAssetExternalException('This asset already exists in DB.');
@@ -99,9 +100,9 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
         $this->validateCmsSlot((string)$assetAddedMessageTransfer->getSlotKey());
 
         $assetExternalTransfer = (new AssetExternalTransfer())
-            ->setAssetUuid($assetAddedMessageTransfer->getAssetUuid())
-            ->setAssetContent($assetAddedMessageTransfer->getAssetContent())
-            ->setAssetName($assetAddedMessageTransfer->getAssetName())
+            ->setAssetUuid($assetAddedMessageTransfer->getScriptUuid())
+            ->setAssetContent($assetAddedMessageTransfer->getScriptView())
+            ->setAssetName($assetAddedMessageTransfer->getScriptName())
             ->setCmsSlotKey($assetAddedMessageTransfer->getSlotKey())
             ->setStores($assetAddedMessageTransfer->getStores());
 
@@ -120,9 +121,10 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      */
     public function updateAsset(AssetUpdatedMessageTransfer $assetUpdatedMessageTransfer): AssetExternalTransfer
     {
-        $assetUpdatedMessageTransfer->requireAppUuid()
-            ->requireAssetContent()
-            ->requireAssetUuid()
+        $assetUpdatedMessageTransfer
+            ->requirePbcUuid()
+            ->requireScriptView()
+            ->requireScriptUuid()
             ->requireSlotKey()
             ->requireStores()
             ->requireTenantUuid();
@@ -130,7 +132,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
         $this->validateTenant($assetUpdatedMessageTransfer->getTenantUuid());
 
         $assetExternalTransfer = $this->assetExternalRepository
-            ->findAssetExternalByAssetUuid((string)$assetUpdatedMessageTransfer->getAssetUuid());
+            ->findAssetExternalByAssetUuid((string)$assetUpdatedMessageTransfer->getScriptUuid());
 
         if ($assetExternalTransfer === null) {
             throw new InvalidAssetExternalException('This asset doesn\'t exist in DB.');
@@ -139,7 +141,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
         $this->validateCmsSlot((string)$assetUpdatedMessageTransfer->getSlotKey());
 
         $assetExternalTransfer
-            ->setAssetContent($assetUpdatedMessageTransfer->getAssetContent())
+            ->setAssetContent($assetUpdatedMessageTransfer->getScriptView())
             ->setCmsSlotKey($assetUpdatedMessageTransfer->getSlotKey())
             ->setStores($assetUpdatedMessageTransfer->getStores());
 
@@ -156,15 +158,16 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      */
     public function deleteAsset(AssetDeletedMessageTransfer $assetDeletedMessageTransfer): void
     {
-        $assetDeletedMessageTransfer->requireAppUuid()
-            ->requireAssetUuid()
+        $assetDeletedMessageTransfer
+            ->requirePbcUuid()
+            ->requireScriptUuid()
             ->requireStores()
             ->requireTenantUuid();
 
         $this->validateTenant($assetDeletedMessageTransfer->getTenantUuid());
 
         $assetExternalTransfer = $this->assetExternalRepository
-            ->findAssetExternalByAssetUuid((string)$assetDeletedMessageTransfer->getAssetUuid());
+            ->findAssetExternalByAssetUuid((string)$assetDeletedMessageTransfer->getScriptUuid());
 
         if (!$assetExternalTransfer) {
             return;

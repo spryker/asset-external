@@ -138,10 +138,11 @@ class AssetExternalFacadeTest extends Unit
         // Arrange
         $assetExternalFacade = $this->getAssetExternalFacade();
         $startAssetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantUuid, 'slt-footer');
-        $newAssetMessageTransfer = (new AssetUpdatedMessageTransfer())->setAssetContent('<script> </script>')
-            ->setAssetUuid($this->assetUuid)
+        $newAssetMessageTransfer = (new AssetUpdatedMessageTransfer())
+            ->setScriptView('<script> </script>')
+            ->setScriptUuid($this->assetUuid)
             ->setTenantUuid($this->tenantUuid)
-            ->setAppUuid($this->getUuid())
+            ->setPbcUuid($this->getUuid())
             ->setSlotKey('slt-footer')
             ->setStores(['US']);
         $expectedAssetTransfer = (new AssetExternalTransfer())->setCmsSlotKey('slt-footer')
@@ -185,9 +186,10 @@ class AssetExternalFacadeTest extends Unit
         // Arrange
         $assetExternalFacade = $this->getAssetExternalFacade();
         $startAssetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantUuid, 'slt-footer');
-        $delAssetMessageTransfer = (new AssetDeletedMessageTransfer())->setAssetUuid($this->assetUuid)
+        $delAssetMessageTransfer = (new AssetDeletedMessageTransfer())
+            ->setScriptUuid($this->assetUuid)
             ->setTenantUuid($this->tenantUuid)
-            ->setAppUuid($this->getUuid());
+            ->setPbcUuid($this->getUuid());
         $updateCheckMessageTransfer = $this->buildAssetUpdatedMessageTransfer($this->tenantUuid, 'slt-footer', $this->assetUuid);
         $assetExternalFacade->addAsset($startAssetMessageTransfer);
 
@@ -230,11 +232,12 @@ class AssetExternalFacadeTest extends Unit
      */
     protected function buildAssetAddedMessageTransfer(string $tenantUuid, string $cmsSlotKey = 'test'): AssetAddedMessageTransfer
     {
-        return (new AssetAddedMessageTransfer())->setAssetName('test')
-            ->setAssetContent('<script>')
-            ->setAssetUuid($this->assetUuid)
+        return (new AssetAddedMessageTransfer())
+            ->setScriptName('test')
+            ->setScriptView('<script>')
+            ->setScriptUuid($this->assetUuid)
             ->setTenantUuid($tenantUuid)
-            ->setAppUuid($this->getUuid())
+            ->setPbcUuid($this->getUuid())
             ->setSlotKey($cmsSlotKey)
             ->setStores(['US', 'DE']);
     }
@@ -250,10 +253,11 @@ class AssetExternalFacadeTest extends Unit
     {
         $assetUuid = $assetUuid ?: $this->getUuid();
 
-        return (new AssetUpdatedMessageTransfer())->setAssetContent('<script>')
-            ->setAssetUuid($assetUuid)
+        return (new AssetUpdatedMessageTransfer())
+            ->setScriptView('<script>')
+            ->setScriptUuid($assetUuid)
             ->setTenantUuid($tenantUuid)
-            ->setAppUuid($this->getUuid())
+            ->setPbcUuid($this->getUuid())
             ->setSlotKey($cmsSlotKey)
             ->setStores(['US', 'DE']);
     }
@@ -266,9 +270,10 @@ class AssetExternalFacadeTest extends Unit
      */
     protected function buildAssetDeletedMessageTransfer(string $tenantUuid, string $cmsSlotKey = 'test'): AssetDeletedMessageTransfer
     {
-        return (new AssetDeletedMessageTransfer())->setAssetUuid($this->getUuid())
+        return (new AssetDeletedMessageTransfer())
+            ->setScriptUuid($this->getUuid())
             ->setTenantUuid($tenantUuid)
-            ->setAppUuid($this->getUuid())
+            ->setPbcUuid($this->getUuid())
             ->setStores(['US', 'DE']);
     }
 
