@@ -201,6 +201,9 @@ class AssetExternalFacadeTest extends Unit
         $assetExternalFacade->updateAsset($updateCheckMessageTransfer);
     }
 
+    /**
+     * @return void
+     */
     public function testFindAssetById(): void
     {
         // Arrange
