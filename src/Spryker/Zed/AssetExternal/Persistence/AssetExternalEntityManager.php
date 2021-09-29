@@ -67,7 +67,8 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
             ->filterByAssetUuid($assetExternalTransfer->getAssetUuid())
             ->findOneOrCreate();
 
-        $assetExternalEntity = $assetExternalEntity->setAssetUuid((string)$assetExternalTransfer->getAssetUuid())
+        $assetExternalEntity = $assetExternalEntity
+            ->setAssetUuid((string)$assetExternalTransfer->getAssetUuid())
             ->setAssetContent((string)$assetExternalTransfer->getAssetContent())
             ->setAssetName((string)$assetExternalTransfer->getAssetName())
             ->setCmsSlotKey((string)$assetExternalTransfer->getCmsSlotKey());

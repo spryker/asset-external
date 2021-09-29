@@ -8,11 +8,11 @@
 namespace SprykerTest\Shared\AssetExternal\Helper;
 
 use Codeception\Module;
+use Generated\Shared\DataBuilder\AssetExternalBuilder;
 use Generated\Shared\Transfer\AssetExternalTransfer;
 use Orm\Zed\AssetExternal\Persistence\SpyAssetExternal;
 use Orm\Zed\AssetExternal\Persistence\SpyAssetExternalQuery;
 use Orm\Zed\AssetExternal\Persistence\SpyAssetExternalStoreQuery;
-use Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManager;
 use SprykerTest\Shared\Testify\Helper\DataCleanupHelperTrait;
 use SprykerTest\Shared\Testify\Helper\LocatorHelperTrait;
 
@@ -22,25 +22,27 @@ class AssetExternalDataHelper extends Module
     use LocatorHelperTrait;
 
     /**
-     * @param string $uuid
+     * @param array $uuid
      * @param string $content
      * @param string $cmsSlotKey
      * @param string $name
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function haveAssetExternal(string $uuid, string $content, string $cmsSlotKey, string $name): AssetExternalTransfer
+    public function haveAssetExternal(array $seed = []): AssetExternalTransfer
     {
+        $assetExternalTransfer = (new AssetExternalBuilder($seed))->build();
+
         $assetExternalEntity = SpyAssetExternalQuery::create()
-            ->filterByAssetUuid($uuid)
+            ->filterByAssetUuid($assetExternalTransfer->getAssetUuid())
             ->findOneOrCreate();
 
         if ($assetExternalEntity->isNew()) {
             $assetExternalEntity = (new SpyAssetExternal())
-                ->setCmsSlotKey($cmsSlotKey)
-                ->setAssetContent($content)
-                ->setAssetUuid($uuid)
-                ->setAssetName($name);
+                ->setCmsSlotKey($assetExternalTransfer->getCmsSlotKey())
+                ->setAssetContent($assetExternalTransfer->getAssetContent())
+                ->setAssetUuid($assetExternalTransfer->getAssetUuid())
+                ->setAssetName($assetExternalTransfer->getAssetName());
 
             $assetExternalEntity->save();
         }
@@ -88,7 +90,16 @@ class AssetExternalDataHelper extends Module
      */
     public function deleteAssetExternal(AssetExternalTransfer $assetExternalTransfer): void
     {
-        $assetExternalEntity = (new AssetExternalEntityManager())->deleteAssetExternal($assetExternalTransfer);
+        SpyAssetExternalStoreQuery::create()
+            ->findByFkAssetExternal($assetExternalTransfer->getIdAssetExternalOrFail())
+            ->delete();
+
+        $assetExternalEntity = SpyAssetExternalQuery::create()
+            ->findOneByIdAssetExternal($assetExternalTransfer->getIdAssetExternalOrFail());
+
+        if ($assetExternalEntity !== null) {
+            $assetExternalEntity->delete();
+        }
     }
 
     /**
@@ -98,8 +109,15 @@ class AssetExternalDataHelper extends Module
      */
     public function updateAssetExternal(AssetExternalTransfer $assetExternalTransfer): AssetExternalTransfer
     {
-        $assetExternalEntity = (new AssetExternalEntityManager())->saveAssetExternal($assetExternalTransfer);
+        $assetExternalEntity = SpyAssetExternalQuery::create()
+            ->filterByAssetUuid($assetExternalTransfer->getAssetUuid())
+            ->findOneOrCreate();
 
-        return (new AssetExternalTransfer())->fromArray($assetExternalEntity->toArray());
+        $assetExternalEntity->fromArray($assetExternalTransfer->toArray());
+        $assetExternalEntity->save();
+
+        $assetExternalTransfer->setIdAssetExternal($assetExternalEntity->getIdAssetExternal());
+
+        return $assetExternalTransfer;
     }
 }
