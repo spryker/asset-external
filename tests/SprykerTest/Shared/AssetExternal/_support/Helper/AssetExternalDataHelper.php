@@ -22,10 +22,7 @@ class AssetExternalDataHelper extends Module
     use LocatorHelperTrait;
 
     /**
-     * @param array $uuid
-     * @param string $content
-     * @param string $cmsSlotKey
-     * @param string $name
+     * @param array $seed
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
