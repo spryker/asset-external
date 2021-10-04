@@ -207,7 +207,6 @@ class AssetExternalFacadeTest extends Unit
     public function testFindAssetById(): void
     {
         // Arrange
-        $assetUuid = Uuid::uuid4();
         $expectedAssetExternal = $this->tester->haveAssetExternal(
             ['cmsSlotKey' => 'external-asset-header'],
         );
