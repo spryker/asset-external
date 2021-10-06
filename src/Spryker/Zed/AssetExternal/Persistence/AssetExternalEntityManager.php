@@ -98,9 +98,9 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
                 (int)$storeTransfer->getIdStore()
             );
 
-            $storeTransferIds[] = $storeTransfer->getIdStore();
+            $storeTransferIds[] = $storeTransfer->getIdStoreOrFail();
         }
-        $this->deleteStoresNotInStoreIdList($storeTransferIds, $assetExternalTransfer->getIdAssetExternal());
+        $this->deleteStoresNotInStoreIdList($storeTransferIds, $assetExternalTransfer->getIdAssetExternalOrFail());
 
         return $assetExternalTransfer;
     }
