@@ -45,9 +45,7 @@ class AssetExternalDataHelper extends Module
         }
 
         $this->getDataCleanupHelper()->_addCleanup(function () use ($assetExternalEntity): void {
-            (new SpyAssetExternalQuery())
-                ->findByIdAssetExternal($assetExternalEntity->getIdAssetExternal())
-                ->delete();
+            $assetExternalEntity->delete();
         });
 
         $assetExternalTransfer = (new AssetExternalTransfer())->fromArray($assetExternalEntity->toArray(), true);

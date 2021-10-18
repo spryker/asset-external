@@ -18,6 +18,6 @@ class AssetExternalConfig extends AbstractBundleConfig
      */
     public function getCurrentTenantUuid(): string
     {
-        return (string) (getenv('TENANT_UUID') ?? getenv('SPRYKER_BE_HOST'));
+        return (string)(getenv('TENANT_UUID') ?? getenv('SPRYKER_BE_HOST'));
     }
 }

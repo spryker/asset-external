@@ -5,10 +5,10 @@
     xsi:schemaLocation="spryker:databuilder-01 http://static.spryker.com/databuilder-01.xsd"
 >
 <transfer name="AssetExternal" strict="true">
-        <property name="assetUuid" dataBuilderRule="uuid"/>
-        <property name="assetName" type="string" dataBuilderRule="word"/>
+        <property name="assetUuid" dataBuilderRule="uuid()"/>
+        <property name="assetName" type="string" dataBuilderRule="word()"/>
         <property name="cmsSlotKey" type="string"/>
-        <property name="assetContent" type="string" dataBuilderRule="word"/>
+        <property name="assetContent" type="string" dataBuilderRule="word()"/>
         <property name="stores" type="string[]" dataBuilderRule="=[]"/>
     </transfer>
 </transfers>
