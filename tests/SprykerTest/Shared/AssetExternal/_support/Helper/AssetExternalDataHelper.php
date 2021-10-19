@@ -72,10 +72,27 @@ class AssetExternalDataHelper extends Module
         }
 
         $this->getDataCleanupHelper()->_addCleanup(function () use ($assetExternalStoreEntity): void {
-            (new SpyAssetExternalStoreQuery())
-                ->findByIdAssetExternalStore($assetExternalStoreEntity->getIdAssetExternalStore())
-                ->delete();
+            $assetExternalStoreEntity->delete();
         });
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
+     *
+     * @return void
+     */
+    public function deleteAssetExternal(AssetExternalTransfer $assetExternalTransfer): void
+    {
+        SpyAssetExternalStoreQuery::create()
+            ->findByFkAssetExternal($assetExternalTransfer->getIdAssetExternalOrFail())
+            ->delete();
+
+        $assetExternalEntity = SpyAssetExternalQuery::create()
+            ->findOneByIdAssetExternal($assetExternalTransfer->getIdAssetExternalOrFail());
+
+        if ($assetExternalEntity !== null) {
+            $assetExternalEntity->delete();
+        }
     }
 
     /**
