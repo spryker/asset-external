@@ -14,6 +14,7 @@ class AssetExternalEvents
      * - This events will be used for spy_asset_external entity creation.
      *
      * @api
+     *
      * @var string
      */
     public const ENTITY_SPY_ASSET_EXTERNAL_CREATE = 'Entity.spy_asset_external.create';
@@ -23,6 +24,7 @@ class AssetExternalEvents
      * - This events will be used for spy_asset_external entity changes.
      *
      * @api
+     *
      * @var string
      */
     public const ENTITY_SPY_ASSET_EXTERNAL_UPDATE = 'Entity.spy_asset_external.update';
@@ -32,6 +34,7 @@ class AssetExternalEvents
      * - This events will be used for spy_asset_external entity deletion.
      *
      * @api
+     *
      * @var string
      */
     public const ENTITY_SPY_ASSET_EXTERNAL_DELETE = 'Entity.spy_asset_external.delete';
@@ -41,6 +44,7 @@ class AssetExternalEvents
      * - This events will be used for spy_asset_external_store entity creation.
      *
      * @api
+     *
      * @var string
      */
     public const ENTITY_SPY_ASSET_EXTERNAL_STORE_CREATE = 'Entity.spy_asset_external_store.create';
@@ -50,6 +54,7 @@ class AssetExternalEvents
      * - This events will be used for spy_asset_external_store entity deletion.
      *
      * @api
+     *
      * @var string
      */
     public const ENTITY_SPY_ASSET_EXTERNAL_STORE_DELETE = 'Entity.spy_asset_external_store.delete';
