@@ -83,15 +83,15 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     public function addAsset(AssetAddedMessageTransfer $assetAddedMessageTransfer): AssetExternalTransfer
     {
         $assetAddedMessageTransfer
-            ->requirePbcUuid()
+            ->requireAppId()
             ->requireScriptView()
             ->requireScriptName()
             ->requireScriptUuid()
             ->requireSlotKey()
             ->requireStores()
-            ->requireTenantUuid();
+            ->requireTenantId();
 
-        $this->validateTenant($assetAddedMessageTransfer->getTenantUuid());
+        $this->validateTenant($assetAddedMessageTransfer->getTenantId());
 
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetAddedMessageTransfer->getScriptUuid());
@@ -125,14 +125,14 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     public function updateAsset(AssetUpdatedMessageTransfer $assetUpdatedMessageTransfer): AssetExternalTransfer
     {
         $assetUpdatedMessageTransfer
-            ->requirePbcUuid()
+            ->requireAppId()
             ->requireScriptView()
             ->requireScriptUuid()
             ->requireSlotKey()
             ->requireStores()
-            ->requireTenantUuid();
+            ->requireTenantId();
 
-        $this->validateTenant($assetUpdatedMessageTransfer->getTenantUuid());
+        $this->validateTenant($assetUpdatedMessageTransfer->getTenantId());
 
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetUpdatedMessageTransfer->getScriptUuid());
@@ -162,12 +162,12 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     public function deleteAsset(AssetDeletedMessageTransfer $assetDeletedMessageTransfer): void
     {
         $assetDeletedMessageTransfer
-            ->requirePbcUuid()
+            ->requireAppId()
             ->requireScriptUuid()
             ->requireStores()
-            ->requireTenantUuid();
+            ->requireTenantId();
 
-        $this->validateTenant($assetDeletedMessageTransfer->getTenantUuid());
+        $this->validateTenant($assetDeletedMessageTransfer->getTenantId());
 
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetDeletedMessageTransfer->getScriptUuid());
@@ -189,15 +189,15 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     }
 
     /**
-     * @param string|null $tenantUuid
+     * @param string|null $tenantId
      *
      * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantUuidException
      *
      * @return void
      */
-    protected function validateTenant(?string $tenantUuid): void
+    protected function validateTenant(?string $tenantId): void
     {
-        if (empty($this->currentTenantUuid) || $tenantUuid !== $this->currentTenantUuid) {
+        if (empty($this->currentTenantUuid) || $tenantId !== $this->currentTenantUuid) {
             throw new InvalidTenantUuidException('Invalid tenant UUID.');
         }
     }
