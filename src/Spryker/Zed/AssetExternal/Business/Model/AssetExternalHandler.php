@@ -184,7 +184,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
 
         $this->assetExternalEntityManager->deleteAssetExternalStores(
             $assetExternalTransfer,
-            $this->getStoreTransfersByStoreNames($assetDeletedMessageTransfer->getStores())
+            $this->getStoreTransfersByStoreNames($assetDeletedMessageTransfer->getStores()),
         );
     }
 
@@ -212,20 +212,20 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     protected function validateCmsSlot(string $key): void
     {
         $cmsSlotTransfers = $this->cmsSlotFacade->getCmsSlotsByCriteria(
-            (new CmsSlotCriteriaTransfer())->addKey($key)
+            (new CmsSlotCriteriaTransfer())->addKey($key),
         );
 
-        if (count($cmsSlotTransfers) != self::EXPECTED_CMS_SLOT_COUNT_WITH_REQUESTED_KEY) {
+        if (count($cmsSlotTransfers) != static::EXPECTED_CMS_SLOT_COUNT_WITH_REQUESTED_KEY) {
             throw new InvalidAssetExternalException(
-                'This asset has invalid cms slot key.'
+                'This asset has invalid cms slot key.',
             );
         }
     }
 
     /**
-     * @param string[] $storeNames
+     * @param array<string> $storeNames
      *
-     * @return \Generated\Shared\Transfer\StoreTransfer[]
+     * @return array<\Generated\Shared\Transfer\StoreTransfer>
      */
     protected function getStoreTransfersByStoreNames(array $storeNames): array
     {

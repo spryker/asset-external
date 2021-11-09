@@ -18,7 +18,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 {
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer[] $storeTransfers
+     * @param array<\Generated\Shared\Transfer\StoreTransfer> $storeTransfers
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
@@ -82,7 +82,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer[] $storeTransfers
+     * @param array<\Generated\Shared\Transfer\StoreTransfer> $storeTransfers
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
@@ -96,7 +96,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
         foreach ($storeTransfers as $storeTransfer) {
             $this->saveAssetExternalStore(
                 (int)$assetExternalTransfer->getIdAssetExternal(),
-                (int)$storeTransfer->getIdStore()
+                (int)$storeTransfer->getIdStore(),
             );
 
             $storeTransferIds[] = $storeTransfer->getIdStoreOrFail();
@@ -147,7 +147,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer[] $storeTransfers
+     * @param array<\Generated\Shared\Transfer\StoreTransfer> $storeTransfers
      *
      * @return void
      */
@@ -168,7 +168,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
     }
 
     /**
-     * @param int[] $storeTransferIds
+     * @param array<int> $storeTransferIds
      * @param int $idAssetExternal
      *
      * @return void
