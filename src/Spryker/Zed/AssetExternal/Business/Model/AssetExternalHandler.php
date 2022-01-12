@@ -14,7 +14,7 @@ use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
 use Generated\Shared\Transfer\CmsSlotCriteriaTransfer;
 use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
-use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantUuidException;
+use Spryker\Zed\AssetExternal\Business\Exception\InvalidtenantIdentifierException;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface;
@@ -40,7 +40,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     /**
      * @var string
      */
-    protected $currentTenantUuid;
+    protected $currenttenantIdentifier;
 
     /**
      * @var \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface
@@ -68,7 +68,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     ) {
         $this->storeFacade = $storeFacade;
         $this->cmsSlotFacade = $cmsSlotFacade;
-        $this->currentTenantUuid = $config->getCurrentTenantUuid();
+        $this->currenttenantIdentifier = $config->getCurrenttenantIdentifier();
         $this->assetExternalRepository = $assetExternalRepository;
         $this->assetExternalEntityManager = $assetExternalEntityManager;
     }
@@ -191,14 +191,14 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     /**
      * @param string|null $tenantId
      *
-     * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantUuidException
+     * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidtenantIdentifierException
      *
      * @return void
      */
     protected function validateTenant(?string $tenantId): void
     {
-        if (empty($this->currentTenantUuid) || $tenantId !== $this->currentTenantUuid) {
-            throw new InvalidTenantUuidException('Invalid tenant UUID.');
+        if (empty($this->currenttenantIdentifier) || $tenantId !== $this->currenttenantIdentifier) {
+            throw new InvalidtenantIdentifierException('Invalid tenant identifier.');
         }
     }
 

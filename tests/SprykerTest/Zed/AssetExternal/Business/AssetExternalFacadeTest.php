@@ -18,7 +18,7 @@ use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
 use Spryker\Zed\AssetExternal\Business\AssetExternalBusinessFactory;
 use Spryker\Zed\AssetExternal\Business\AssetExternalFacadeInterface;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
-use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantUuidException;
+use Spryker\Zed\AssetExternal\Business\Exception\InvalidtenantIdentifierException;
 use Spryker\Zed\Kernel\Container;
 
 /**
@@ -37,7 +37,7 @@ class AssetExternalFacadeTest extends Unit
     /**
      * @var string
      */
-    protected $tenantUuid;
+    protected $tenantIdentifier;
 
     /**
      * @var string
@@ -55,21 +55,21 @@ class AssetExternalFacadeTest extends Unit
     public function setUp(): void
     {
         parent::setUp();
-        $this->tenantUuid = $this->getUuid();
+        $this->tenantIdentifier = $this->getUuid();
         $this->assetUuid = $this->getUuid();
     }
 
     /**
      * @return void
      */
-    public function testAddAssetAssertThrowsExceptionWhenTenantUuidInvalid(): void
+    public function testAddAssetAssertThrowsExceptionWhentenantIdentifierInvalid(): void
     {
         // Arrange
         $assetAddedMessageTransfer = $this->buildAssetAddedMessageTransfer($this->getUuid());
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
-        $this->expectException(InvalidTenantUuidException::class);
+        $this->expectException(InvalidtenantIdentifierException::class);
 
         // Act
         $assetExternalFacade->addAsset($assetAddedMessageTransfer);
@@ -81,7 +81,7 @@ class AssetExternalFacadeTest extends Unit
     public function testAddAssetAssertThrowsExceptionWhenExternalAssetInvalid(): void
     {
         // Arrange
-        $assetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantUuid);
+        $assetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantIdentifier);
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
@@ -97,7 +97,7 @@ class AssetExternalFacadeTest extends Unit
     public function testAddAssetAssertSuccessfull(): void
     {
         // Arrange
-        $assetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantUuid, 'slt-footer');
+        $assetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantIdentifier, 'slt-footer');
         $assetExternalFacade = $this->getAssetExternalFacade();
         $expectedAssetTransfer = (new AssetExternalTransfer())->setCmsSlotKey('slt-footer')
             ->setStores(['US', 'DE'])
@@ -117,14 +117,14 @@ class AssetExternalFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testUpdateAssetAssertThrowsExceptionWhenTenantUuidInvalid(): void
+    public function testUpdateAssetAssertThrowsExceptionWhentenantIdentifierInvalid(): void
     {
         // Arrange
         $assetUpdatedMessageTransfer = $this->buildAssetUpdatedMessageTransfer($this->getUuid());
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
-        $this->expectException(InvalidTenantUuidException::class);
+        $this->expectException(InvalidtenantIdentifierException::class);
 
         // Act
         $assetExternalFacade->updateAsset($assetUpdatedMessageTransfer);
@@ -137,11 +137,11 @@ class AssetExternalFacadeTest extends Unit
     {
         // Arrange
         $assetExternalFacade = $this->getAssetExternalFacade();
-        $startAssetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantUuid, 'slt-footer');
+        $startAssetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantIdentifier, 'slt-footer');
         $newAssetMessageTransfer = (new AssetUpdatedMessageTransfer())
             ->setScriptView('<script> </script>')
             ->setScriptUuid($this->assetUuid)
-            ->setTenantId($this->tenantUuid)
+            ->setTenantId($this->tenantIdentifier)
             ->setAppId($this->getUuid())
             ->setSlotKey('slt-footer')
             ->setStores(['US']);
@@ -165,14 +165,14 @@ class AssetExternalFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testDeleteAssetAssertThrowsExceptionWhenTenantUuidInvalid(): void
+    public function testDeleteAssetAssertThrowsExceptionWhentenantIdentifierInvalid(): void
     {
         // Arrange
         $assetDeletedMessageTransfer = $this->buildAssetDeletedMessageTransfer($this->getUuid());
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
-        $this->expectException(InvalidTenantUuidException::class);
+        $this->expectException(InvalidtenantIdentifierException::class);
 
         // Act
         $assetExternalFacade->deleteAsset($assetDeletedMessageTransfer);
@@ -185,12 +185,12 @@ class AssetExternalFacadeTest extends Unit
     {
         // Arrange
         $assetExternalFacade = $this->getAssetExternalFacade();
-        $startAssetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantUuid, 'slt-footer');
+        $startAssetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantIdentifier, 'slt-footer');
         $delAssetMessageTransfer = (new AssetDeletedMessageTransfer())
             ->setScriptUuid($this->assetUuid)
-            ->setTenantId($this->tenantUuid)
+            ->setTenantId($this->tenantIdentifier)
             ->setAppId($this->getUuid());
-        $updateCheckMessageTransfer = $this->buildAssetUpdatedMessageTransfer($this->tenantUuid, 'slt-footer', $this->assetUuid);
+        $updateCheckMessageTransfer = $this->buildAssetUpdatedMessageTransfer($this->tenantIdentifier, 'slt-footer', $this->assetUuid);
         $assetExternalFacade->addAsset($startAssetMessageTransfer);
 
         // Assert
@@ -230,7 +230,7 @@ class AssetExternalFacadeTest extends Unit
         $container = new Container();
         $assetExternalConfig = $this->getMockBuilder(AssetExternalConfig::class)->getMock();
 
-        $assetExternalConfig->method('getCurrentTenantUuid')->willReturn($this->tenantUuid);
+        $assetExternalConfig->method('getCurrenttenantIdentifier')->willReturn($this->tenantIdentifier);
 
         $assetExternalBusinessFactory = new AssetExternalBusinessFactory();
         $dependencyProvider = new AssetExternalDependencyProvider();
