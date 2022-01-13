@@ -16,10 +16,10 @@ class AssetExternalConfig extends AbstractBundleConfig
      *
      * @return string
      */
-    public function getCurrenttenantIdentifier(): string
+    public function getCurrentTenantIdentifier(): string
     {
-        $beHostInsteadOftenantIdentifier = getenv('SPRYKER_BE_HOST') !== false ? getenv('SPRYKER_BE_HOST') : 'TENANT_IDENTIFIER_UNDEFINED';
+        $beHostInsteadOfTenantIdentifier = getenv('SPRYKER_BE_HOST') !== false ? getenv('SPRYKER_BE_HOST') : 'TENANT_IDENTIFIER_UNDEFINED';
 
-        return (string)(getenv('TENANT_IDENTIFIER') !== false ? getenv('TENANT_IDENTIFIER') : $beHostInsteadOftenantIdentifier);
+        return (string)(getenv('TENANT_IDENTIFIER') !== false ? getenv('TENANT_IDENTIFIER') : $beHostInsteadOfTenantIdentifier);
     }
 }

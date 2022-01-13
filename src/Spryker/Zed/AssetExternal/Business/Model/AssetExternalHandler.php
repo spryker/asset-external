@@ -14,7 +14,7 @@ use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
 use Generated\Shared\Transfer\CmsSlotCriteriaTransfer;
 use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
-use Spryker\Zed\AssetExternal\Business\Exception\InvalidtenantIdentifierException;
+use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface;
@@ -68,7 +68,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     ) {
         $this->storeFacade = $storeFacade;
         $this->cmsSlotFacade = $cmsSlotFacade;
-        $this->currenttenantIdentifier = $config->getCurrenttenantIdentifier();
+        $this->currenttenantIdentifier = $config->getCurrentTenantIdentifier();
         $this->assetExternalRepository = $assetExternalRepository;
         $this->assetExternalEntityManager = $assetExternalEntityManager;
     }
@@ -191,14 +191,14 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     /**
      * @param string|null $tenantId
      *
-     * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidtenantIdentifierException
+     * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException
      *
      * @return void
      */
     protected function validateTenant(?string $tenantId): void
     {
         if (empty($this->currenttenantIdentifier) || $tenantId !== $this->currenttenantIdentifier) {
-            throw new InvalidtenantIdentifierException('Invalid tenant identifier.');
+            throw new InvalidTenantIdentifierException('Invalid tenant identifier.');
         }
     }
 

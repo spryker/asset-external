@@ -18,7 +18,7 @@ use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
 use Spryker\Zed\AssetExternal\Business\AssetExternalBusinessFactory;
 use Spryker\Zed\AssetExternal\Business\AssetExternalFacadeInterface;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
-use Spryker\Zed\AssetExternal\Business\Exception\InvalidtenantIdentifierException;
+use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException;
 use Spryker\Zed\Kernel\Container;
 
 /**
@@ -69,7 +69,7 @@ class AssetExternalFacadeTest extends Unit
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
-        $this->expectException(InvalidtenantIdentifierException::class);
+        $this->expectException(InvalidTenantIdentifierException::class);
 
         // Act
         $assetExternalFacade->addAsset($assetAddedMessageTransfer);
@@ -117,14 +117,14 @@ class AssetExternalFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testUpdateAssetAssertThrowsExceptionWhentenantIdentifierInvalid(): void
+    public function testUpdateAssetAssertThrowsExceptionWhenTenantIdentifierInvalid(): void
     {
         // Arrange
         $assetUpdatedMessageTransfer = $this->buildAssetUpdatedMessageTransfer($this->getUuid());
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
-        $this->expectException(InvalidtenantIdentifierException::class);
+        $this->expectException(InvalidTenantIdentifierException::class);
 
         // Act
         $assetExternalFacade->updateAsset($assetUpdatedMessageTransfer);
@@ -165,14 +165,14 @@ class AssetExternalFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testDeleteAssetAssertThrowsExceptionWhentenantIdentifierInvalid(): void
+    public function testDeleteAssetAssertThrowsExceptionWhenTenantIdentifierInvalid(): void
     {
         // Arrange
         $assetDeletedMessageTransfer = $this->buildAssetDeletedMessageTransfer($this->getUuid());
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
-        $this->expectException(InvalidtenantIdentifierException::class);
+        $this->expectException(InvalidTenantIdentifierException::class);
 
         // Act
         $assetExternalFacade->deleteAsset($assetDeletedMessageTransfer);
@@ -230,7 +230,7 @@ class AssetExternalFacadeTest extends Unit
         $container = new Container();
         $assetExternalConfig = $this->getMockBuilder(AssetExternalConfig::class)->getMock();
 
-        $assetExternalConfig->method('getCurrenttenantIdentifier')->willReturn($this->tenantIdentifier);
+        $assetExternalConfig->method('getCurrentTenantIdentifier')->willReturn($this->tenantIdentifier);
 
         $assetExternalBusinessFactory = new AssetExternalBusinessFactory();
         $dependencyProvider = new AssetExternalDependencyProvider();

@@ -9,6 +9,6 @@ namespace Spryker\Zed\AssetExternal\Business\Exception;
 
 use Exception;
 
-class InvalidtenantIdentifierException extends Exception
+class InvalidTenantIdentifierException extends Exception
 {
 }
