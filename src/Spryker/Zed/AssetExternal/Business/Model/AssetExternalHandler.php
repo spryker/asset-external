@@ -40,7 +40,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     /**
      * @var string
      */
-    protected $currenttenantIdentifier;
+    protected $currentTenantIdentifier;
 
     /**
      * @var \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface
@@ -68,7 +68,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     ) {
         $this->storeFacade = $storeFacade;
         $this->cmsSlotFacade = $cmsSlotFacade;
-        $this->currenttenantIdentifier = $config->getCurrentTenantIdentifier();
+        $this->currentTenantIdentifier = $config->getCurrentTenantIdentifier();
         $this->assetExternalRepository = $assetExternalRepository;
         $this->assetExternalEntityManager = $assetExternalEntityManager;
     }
@@ -197,7 +197,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      */
     protected function validateTenant(?string $tenantId): void
     {
-        if (empty($this->currenttenantIdentifier) || $tenantId !== $this->currenttenantIdentifier) {
+        if (empty($this->currentTenantIdentifier) || $tenantId !== $this->currentTenantIdentifier) {
             throw new InvalidTenantIdentifierException('Invalid tenant identifier.');
         }
     }
