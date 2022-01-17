@@ -29,7 +29,7 @@ class AssetExternalRepository extends AbstractRepository implements AssetExterna
             ->filterByAssetUuid($assetUuid)
             ->findOne();
 
-        if (empty($assetExternalEntity)) {
+        if (!$assetExternalEntity) {
             return null;
         }
 
@@ -48,7 +48,7 @@ class AssetExternalRepository extends AbstractRepository implements AssetExterna
             ->filterByIdAssetExternal($idAssetExternal)
             ->findOne();
 
-        if (empty($assetExternalEntity)) {
+        if (!$assetExternalEntity) {
             return null;
         }
 
