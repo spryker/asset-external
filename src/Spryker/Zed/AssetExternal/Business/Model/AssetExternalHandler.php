@@ -197,7 +197,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      */
     protected function validateTenant(?string $tenantId): void
     {
-        if (empty($this->currentTenantUuid) || $tenantId !== $this->currentTenantUuid) {
+        if (!$this->currentTenantUuid || $tenantId !== $this->currentTenantUuid) {
             throw new InvalidTenantUuidException('Invalid tenant UUID.');
         }
     }
