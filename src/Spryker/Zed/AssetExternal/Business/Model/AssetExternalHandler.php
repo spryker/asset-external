@@ -82,16 +82,18 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      */
     public function addAsset(ScriptAddedTransfer $scriptAddedTransfer): AssetExternalTransfer
     {
+        $scriptAddedTransfer->getMessageAttributesOrFail()
+            ->requireAppIdentifier()
+            ->requireTenantIdentifier();
+
         $scriptAddedTransfer
-            ->requireAppId()
             ->requireScriptView()
             ->requireScriptName()
             ->requireScriptUuid()
             ->requireSlotKey()
-            ->requireStores()
-            ->requireTenantId();
+            ->requireStores();
 
-        $this->validateTenant($scriptAddedTransfer->getTenantId());
+        $this->validateTenant($scriptAddedTransfer->getMessageAttributes()->getTenantIdentifier());
 
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$scriptAddedTransfer->getScriptUuid());
@@ -124,15 +126,17 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      */
     public function updateAsset(ScriptUpdatedTransfer $scriptUpdatedTransfer): AssetExternalTransfer
     {
+        $scriptUpdatedTransfer->getMessageAttributesOrFail()
+            ->requireAppIdentifier()
+            ->requireTenantIdentifier();
+
         $scriptUpdatedTransfer
-            ->requireAppId()
             ->requireScriptView()
             ->requireScriptUuid()
             ->requireSlotKey()
-            ->requireStores()
-            ->requireTenantId();
+            ->requireStores();
 
-        $this->validateTenant($scriptUpdatedTransfer->getTenantId());
+        $this->validateTenant($scriptUpdatedTransfer->getMessageAttributesOrFail()->getTenantIdentifier());
 
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$scriptUpdatedTransfer->getScriptUuid());
@@ -161,13 +165,15 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      */
     public function deleteAsset(ScriptDeletedTransfer $scriptDeletedTransfer): void
     {
-        $scriptDeletedTransfer
-            ->requireAppId()
-            ->requireScriptUuid()
-            ->requireStores()
-            ->requireTenantId();
+        $scriptDeletedTransfer->getMessageAttributesOrFail()
+            ->requireAppIdentifier()
+            ->requireTenantIdentifier();
 
-        $this->validateTenant($scriptDeletedTransfer->getTenantId());
+        $scriptDeletedTransfer
+            ->requireScriptUuid()
+            ->requireStores();
+
+        $this->validateTenant($scriptDeletedTransfer->getMessageAttributesOrFail()->getTenantIdentifier());
 
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$scriptDeletedTransfer->getScriptUuid());

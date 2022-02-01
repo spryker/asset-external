@@ -9,32 +9,6 @@
     <property name="stores" type="string[]" singular="store"/>
   </transfer>
 
-  <transfer name="AssetAddedMessage" strict="true">
-    <property name="tenantId" type="string"/>
-    <property name="appId" type="string"/>
-    <property name="scriptUuid" type="string"/>
-    <property name="scriptName" type="string"/>
-    <property name="scriptView" type="string"/>
-    <property name="slotKey" type="string"/>
-    <property name="stores" type="string[]" singular="store"/>
-  </transfer>
-
-  <transfer name="AssetUpdatedMessage" strict="true">
-    <property name="tenantId" type="string"/>
-    <property name="appId" type="string"/>
-    <property name="scriptUuid" type="string"/>
-    <property name="scriptView" type="string"/>
-    <property name="slotKey" type="string"/>
-    <property name="stores" type="string[]" singular="store"/>
-  </transfer>
-
-  <transfer name="AssetDeletedMessage" strict="true">
-    <property name="tenantId" type="string"/>
-    <property name="appId" type="string"/>
-    <property name="scriptUuid" type="string"/>
-    <property name="stores" type="string[]" singular="store"/>
-  </transfer>
-
   <transfer name="Store">
     <property name="idStore" type="int"/>
   </transfer>
