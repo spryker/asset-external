@@ -7,31 +7,31 @@
 
 namespace Spryker\Zed\AssetExternal\Business\Model;
 
-use Generated\Shared\Transfer\AssetAddedMessageTransfer;
-use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
-use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
+use Generated\Shared\Transfer\ScriptAddedTransfer;
+use Generated\Shared\Transfer\ScriptDeletedTransfer;
+use Generated\Shared\Transfer\ScriptUpdatedTransfer;
 
 interface AssetExternalHandlerInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\AssetAddedMessageTransfer $assetAddedMessageTransfer
+     * @param \Generated\Shared\Transfer\ScriptAddedTransfer $scriptAddedTransfer
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function addAsset(AssetAddedMessageTransfer $assetAddedMessageTransfer): AssetExternalTransfer;
+    public function addAsset(ScriptAddedTransfer $scriptAddedTransfer): AssetExternalTransfer;
 
     /**
-     * @param \Generated\Shared\Transfer\AssetUpdatedMessageTransfer $assetUpdatedMessageTransfer
+     * @param \Generated\Shared\Transfer\ScriptUpdatedTransfer $scriptUpdatedTransfer
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function updateAsset(AssetUpdatedMessageTransfer $assetUpdatedMessageTransfer): AssetExternalTransfer;
+    public function updateAsset(ScriptUpdatedTransfer $scriptUpdatedTransfer): AssetExternalTransfer;
 
     /**
-     * @param \Generated\Shared\Transfer\AssetDeletedMessageTransfer $assetDeletedMessageTransfer
+     * @param \Generated\Shared\Transfer\ScriptDeletedTransfer $scriptDeletedTransfer
      *
      * @return void
      */
-    public function deleteAsset(AssetDeletedMessageTransfer $assetDeletedMessageTransfer): void;
+    public function deleteAsset(ScriptDeletedTransfer $scriptDeletedTransfer): void;
 }

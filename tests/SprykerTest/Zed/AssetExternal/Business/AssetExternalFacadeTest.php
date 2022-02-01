@@ -8,10 +8,10 @@
 namespace SprykerTest\Zed\AssetExternal\Business;
 
 use Codeception\Test\Unit;
-use Generated\Shared\Transfer\AssetAddedMessageTransfer;
-use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
-use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
+use Generated\Shared\Transfer\ScriptAddedTransfer;
+use Generated\Shared\Transfer\ScriptDeletedTransfer;
+use Generated\Shared\Transfer\ScriptUpdatedTransfer;
 use Ramsey\Uuid\Uuid;
 use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
@@ -65,7 +65,7 @@ class AssetExternalFacadeTest extends Unit
     public function testAddAssetAssertThrowsExceptionWhentenantIdentifierInvalid(): void
     {
         // Arrange
-        $assetAddedMessageTransfer = $this->buildAssetAddedMessageTransfer($this->getUuid());
+        $assetAddedMessageTransfer = $this->buildScriptAddedTransfer($this->getUuid());
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
@@ -81,7 +81,7 @@ class AssetExternalFacadeTest extends Unit
     public function testAddAssetAssertThrowsExceptionWhenExternalAssetInvalid(): void
     {
         // Arrange
-        $assetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantIdentifier);
+        $assetMessageTransfer = $this->buildScriptAddedTransfer($this->tenantIdentifier);
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
@@ -97,7 +97,7 @@ class AssetExternalFacadeTest extends Unit
     public function testAddAssetAssertSuccessfull(): void
     {
         // Arrange
-        $assetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantIdentifier, 'slt-footer');
+        $assetMessageTransfer = $this->buildScriptAddedTransfer($this->tenantIdentifier, 'slt-footer');
         $assetExternalFacade = $this->getAssetExternalFacade();
         $expectedAssetTransfer = (new AssetExternalTransfer())->setCmsSlotKey('slt-footer')
             ->setStores(['US', 'DE'])
@@ -120,7 +120,7 @@ class AssetExternalFacadeTest extends Unit
     public function testUpdateAssetAssertThrowsExceptionWhenTenantIdentifierInvalid(): void
     {
         // Arrange
-        $assetUpdatedMessageTransfer = $this->buildAssetUpdatedMessageTransfer($this->getUuid());
+        $assetUpdatedMessageTransfer = $this->buildScriptUpdatedTransfer($this->getUuid());
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
@@ -137,8 +137,8 @@ class AssetExternalFacadeTest extends Unit
     {
         // Arrange
         $assetExternalFacade = $this->getAssetExternalFacade();
-        $startAssetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantIdentifier, 'slt-footer');
-        $newAssetMessageTransfer = (new AssetUpdatedMessageTransfer())
+        $startAssetMessageTransfer = $this->buildScriptAddedTransfer($this->tenantIdentifier, 'slt-footer');
+        $newAssetMessageTransfer = (new ScriptUpdatedTransfer())
             ->setScriptView('<script> </script>')
             ->setScriptUuid($this->assetUuid)
             ->setTenantId($this->tenantIdentifier)
@@ -168,7 +168,7 @@ class AssetExternalFacadeTest extends Unit
     public function testDeleteAssetAssertThrowsExceptionWhenTenantIdentifierInvalid(): void
     {
         // Arrange
-        $assetDeletedMessageTransfer = $this->buildAssetDeletedMessageTransfer($this->getUuid());
+        $assetDeletedMessageTransfer = $this->buildScriptDeletedTransfer($this->getUuid());
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
@@ -185,12 +185,12 @@ class AssetExternalFacadeTest extends Unit
     {
         // Arrange
         $assetExternalFacade = $this->getAssetExternalFacade();
-        $startAssetMessageTransfer = $this->buildAssetAddedMessageTransfer($this->tenantIdentifier, 'slt-footer');
-        $delAssetMessageTransfer = (new AssetDeletedMessageTransfer())
+        $startAssetMessageTransfer = $this->buildScriptAddedTransfer($this->tenantIdentifier, 'slt-footer');
+        $delAssetMessageTransfer = (new ScriptDeletedTransfer())
             ->setScriptUuid($this->assetUuid)
             ->setTenantId($this->tenantIdentifier)
             ->setAppId($this->getUuid());
-        $updateCheckMessageTransfer = $this->buildAssetUpdatedMessageTransfer($this->tenantIdentifier, 'slt-footer', $this->assetUuid);
+        $updateCheckMessageTransfer = $this->buildScriptUpdatedTransfer($this->tenantIdentifier, 'slt-footer', $this->assetUuid);
         $assetExternalFacade->addAsset($startAssetMessageTransfer);
 
         // Assert
@@ -246,11 +246,11 @@ class AssetExternalFacadeTest extends Unit
      * @param string $tenantId
      * @param string $cmsSlotKey
      *
-     * @return \Generated\Shared\Transfer\AssetAddedMessageTransfer
+     * @return \Generated\Shared\Transfer\ScriptAddedTransfer
      */
-    protected function buildAssetAddedMessageTransfer(string $tenantId, string $cmsSlotKey = 'test'): AssetAddedMessageTransfer
+    protected function buildScriptAddedTransfer(string $tenantId, string $cmsSlotKey = 'test'): ScriptAddedTransfer
     {
-        return (new AssetAddedMessageTransfer())
+        return (new ScriptAddedTransfer())
             ->setScriptName('test')
             ->setScriptView('<script>')
             ->setScriptUuid($this->assetUuid)
@@ -265,13 +265,13 @@ class AssetExternalFacadeTest extends Unit
      * @param string $cmsSlotKey
      * @param string|null $assetUuid
      *
-     * @return \Generated\Shared\Transfer\AssetUpdatedMessageTransfer
+     * @return \Generated\Shared\Transfer\ScriptUpdatedTransfer
      */
-    protected function buildAssetUpdatedMessageTransfer(string $tenantId, string $cmsSlotKey = 'test', ?string $assetUuid = null): AssetUpdatedMessageTransfer
+    protected function buildScriptUpdatedTransfer(string $tenantId, string $cmsSlotKey = 'test', ?string $assetUuid = null): ScriptUpdatedTransfer
     {
         $assetUuid = $assetUuid ?: $this->getUuid();
 
-        return (new AssetUpdatedMessageTransfer())
+        return (new ScriptUpdatedTransfer())
             ->setScriptView('<script>')
             ->setScriptUuid($assetUuid)
             ->setTenantId($tenantId)
@@ -284,11 +284,11 @@ class AssetExternalFacadeTest extends Unit
      * @param string $tenantId
      * @param string $cmsSlotKey
      *
-     * @return \Generated\Shared\Transfer\AssetDeletedMessageTransfer
+     * @return \Generated\Shared\Transfer\ScriptDeletedTransfer
      */
-    protected function buildAssetDeletedMessageTransfer(string $tenantId, string $cmsSlotKey = 'test'): AssetDeletedMessageTransfer
+    protected function buildScriptDeletedTransfer(string $tenantId, string $cmsSlotKey = 'test'): ScriptDeletedTransfer
     {
-        return (new AssetDeletedMessageTransfer())
+        return (new ScriptDeletedTransfer())
             ->setScriptUuid($this->getUuid())
             ->setTenantId($tenantId)
             ->setAppId($this->getUuid())
