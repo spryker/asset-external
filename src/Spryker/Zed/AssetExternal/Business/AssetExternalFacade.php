@@ -7,10 +7,10 @@
 
 namespace Spryker\Zed\AssetExternal\Business;
 
+use Generated\Shared\Transfer\AssetAddedTransfer;
+use Generated\Shared\Transfer\AssetDeletedTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
-use Generated\Shared\Transfer\ScriptAddedTransfer;
-use Generated\Shared\Transfer\ScriptDeletedTransfer;
-use Generated\Shared\Transfer\ScriptUpdatedTransfer;
+use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 /**
@@ -25,13 +25,13 @@ class AssetExternalFacade extends AbstractFacade implements AssetExternalFacadeI
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\ScriptAddedTransfer $scriptAddedTransfer
+     * @param \Generated\Shared\Transfer\AssetAddedTransfer $assetAddedTransfer
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function addAsset(ScriptAddedTransfer $scriptAddedTransfer): AssetExternalTransfer
+    public function addAsset(AssetAddedTransfer $assetAddedTransfer): AssetExternalTransfer
     {
-        return $this->getFactory()->createAssetExternalHandler()->addAsset($scriptAddedTransfer);
+        return $this->getFactory()->createAssetExternalHandler()->addAsset($assetAddedTransfer);
     }
 
     /**
@@ -39,13 +39,13 @@ class AssetExternalFacade extends AbstractFacade implements AssetExternalFacadeI
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\ScriptUpdatedTransfer $scriptUpdatedTransfer
+     * @param \Generated\Shared\Transfer\AssetUpdatedTransfer $assetUpdatedTransfer
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function updateAsset(ScriptUpdatedTransfer $scriptUpdatedTransfer): AssetExternalTransfer
+    public function updateAsset(AssetUpdatedTransfer $assetUpdatedTransfer): AssetExternalTransfer
     {
-        return $this->getFactory()->createAssetExternalHandler()->updateAsset($scriptUpdatedTransfer);
+        return $this->getFactory()->createAssetExternalHandler()->updateAsset($assetUpdatedTransfer);
     }
 
     /**
@@ -53,13 +53,13 @@ class AssetExternalFacade extends AbstractFacade implements AssetExternalFacadeI
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\ScriptDeletedTransfer $scriptDeletedTransfer
+     * @param \Generated\Shared\Transfer\AssetDeletedTransfer $assetDeletedTransfer
      *
      * @return void
      */
-    public function deleteAsset(ScriptDeletedTransfer $scriptDeletedTransfer): void
+    public function deleteAsset(AssetDeletedTransfer $assetDeletedTransfer): void
     {
-        $this->getFactory()->createAssetExternalHandler()->deleteAsset($scriptDeletedTransfer);
+        $this->getFactory()->createAssetExternalHandler()->deleteAsset($assetDeletedTransfer);
     }
 
     /**

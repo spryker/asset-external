@@ -8,11 +8,11 @@
 namespace SprykerTest\Zed\AssetExternal\Business;
 
 use Codeception\Test\Unit;
+use Generated\Shared\Transfer\AssetAddedTransfer;
+use Generated\Shared\Transfer\AssetDeletedTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
+use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
-use Generated\Shared\Transfer\ScriptAddedTransfer;
-use Generated\Shared\Transfer\ScriptDeletedTransfer;
-use Generated\Shared\Transfer\ScriptUpdatedTransfer;
 use Ramsey\Uuid\Uuid;
 use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
@@ -139,9 +139,9 @@ class AssetExternalFacadeTest extends Unit
         // Arrange
         $assetExternalFacade = $this->getAssetExternalFacade();
         $scriptAddedTransfer = $this->buildScriptAddedTransfer($this->tenantIdentifier, 'slt-footer');
-        $scriptUpdatedTransfer = (new ScriptUpdatedTransfer())
-            ->setScriptView('<script> </script>')
-            ->setScriptUuid($this->assetUuid)
+        $scriptUpdatedTransfer = (new AssetUpdatedTransfer())
+            ->setAssetView('<script> </script>')
+            ->setAssetIdentifier($this->assetUuid)
             ->setSlotKey('slt-footer')
             ->setStores(['US'])
             ->setMessageAttributes(
@@ -190,8 +190,8 @@ class AssetExternalFacadeTest extends Unit
         // Arrange
         $assetExternalFacade = $this->getAssetExternalFacade();
         $scriptAddedTransfer = $this->buildScriptAddedTransfer($this->tenantIdentifier, 'slt-footer');
-        $scriptDeletedTransfer = (new ScriptDeletedTransfer())
-            ->setScriptUuid($this->assetUuid)
+        $scriptDeletedTransfer = (new AssetDeletedTransfer())
+            ->setAssetIdentifier($this->assetUuid)
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
                     ->setTenantIdentifier($this->tenantIdentifier)
@@ -253,14 +253,14 @@ class AssetExternalFacadeTest extends Unit
      * @param string $tenantId
      * @param string $cmsSlotKey
      *
-     * @return \Generated\Shared\Transfer\ScriptAddedTransfer
+     * @return \Generated\Shared\Transfer\AssetAddedTransfer
      */
-    protected function buildScriptAddedTransfer(string $tenantId, string $cmsSlotKey = 'test'): ScriptAddedTransfer
+    protected function buildScriptAddedTransfer(string $tenantId, string $cmsSlotKey = 'test'): AssetAddedTransfer
     {
-        return (new ScriptAddedTransfer())
-            ->setScriptName('test')
-            ->setScriptView('<script>')
-            ->setScriptUuid($this->assetUuid)
+        return (new AssetAddedTransfer())
+            ->setAssetName('test')
+            ->setAssetView('<script>')
+            ->setAssetIdentifier($this->assetUuid)
             ->setSlotKey($cmsSlotKey)
             ->setStores(['US', 'DE'])
             ->setMessageAttributes(
@@ -274,15 +274,15 @@ class AssetExternalFacadeTest extends Unit
      * @param string $cmsSlotKey
      * @param string|null $assetUuid
      *
-     * @return \Generated\Shared\Transfer\ScriptUpdatedTransfer
+     * @return \Generated\Shared\Transfer\AssetUpdatedTransfer
      */
-    protected function buildScriptUpdatedTransfer(string $tenantId, string $cmsSlotKey = 'test', ?string $assetUuid = null): ScriptUpdatedTransfer
+    protected function buildScriptUpdatedTransfer(string $tenantId, string $cmsSlotKey = 'test', ?string $assetUuid = null): AssetUpdatedTransfer
     {
         $assetUuid = $assetUuid ?: $this->getUuid();
 
-        return (new ScriptUpdatedTransfer())
-            ->setScriptView('<script>')
-            ->setScriptUuid($assetUuid)
+        return (new AssetUpdatedTransfer())
+            ->setAssetView('<script>')
+            ->setAssetIdentifier($assetUuid)
             ->setSlotKey($cmsSlotKey)
             ->setStores(['US', 'DE'])
             ->setMessageAttributes(
@@ -295,12 +295,12 @@ class AssetExternalFacadeTest extends Unit
      * @param string $tenantId
      * @param string $cmsSlotKey
      *
-     * @return \Generated\Shared\Transfer\ScriptDeletedTransfer
+     * @return \Generated\Shared\Transfer\AssetDeletedTransfer
      */
-    protected function buildScriptDeletedTransfer(string $tenantId, string $cmsSlotKey = 'test'): ScriptDeletedTransfer
+    protected function buildScriptDeletedTransfer(string $tenantId, string $cmsSlotKey = 'test'): AssetDeletedTransfer
     {
-        return (new ScriptDeletedTransfer())
-            ->setScriptUuid($this->getUuid())
+        return (new AssetDeletedTransfer())
+            ->setAssetIdentifier($this->getUuid())
             ->setStores(['US', 'DE'])
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())

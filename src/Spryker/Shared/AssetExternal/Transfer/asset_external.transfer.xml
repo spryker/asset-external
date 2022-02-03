@@ -17,35 +17,33 @@
     <property name="keys" type="string[]" singular="key"/>
   </transfer>
 
-  <transfer name="ScriptAdded">
-    <property name="tenantId" type="string"/>
-    <property name="appId" type="string"/>
-    <property name="scriptView" type="string"/>
-    <property name="scriptUuid" type="string"/>
-    <property name="scriptName" type="string"/>
+  <transfer name="MessageAttributes">
+    <property name="tenantIdentifier" type="string"/>
+    <property name="appIdentifier" type="string"/>
+  </transfer>
+
+  <transfer name="AssetAdded">
+    <property name="assetIdentifier" type="string"/>
+    <property name="assetName" type="string"/>
+    <property name="assetView" type="string"/>
     <property name="slotKey" type="string"/>
     <property name="stores" type="array"/>
     <property name="messageAttributes" type="MessageAttributes"/>
   </transfer>
 
-  <transfer name="MessageAttributes"/>
-  <transfer name="ScriptUpdated">
-    <property name="tenantId" type="string"/>
-    <property name="appId" type="string"/>
-    <property name="scriptView" type="string"/>
-    <property name="scriptUuid" type="string"/>
-    <property name="scriptName" type="string"/>
+  <transfer name="AssetUpdated">
+    <property name="assetIdentifier" type="string"/>
+    <property name="assetName" type="string"/>
+    <property name="assetView" type="string"/>
     <property name="slotKey" type="string"/>
     <property name="stores" type="array"/>
     <property name="messageAttributes" type="MessageAttributes"/>
   </transfer>
 
-  <transfer name="ScriptDeleted">
-    <property name="tenantId" type="string"/>
-    <property name="appId" type="string"/>
-    <property name="scriptView" type="string"/>
-    <property name="scriptUuid" type="string"/>
-    <property name="scriptName" type="string"/>
+  <transfer name="AssetDeleted">
+    <property name="assetIdentifier" type="string"/>
+    <property name="assetName" type="string"/>
+    <property name="assetView" type="string"/>
     <property name="slotKey" type="string"/>
     <property name="stores" type="array"/>
     <property name="messageAttributes" type="MessageAttributes"/>

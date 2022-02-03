@@ -7,7 +7,7 @@
 
 namespace Spryker\Zed\AssetExternal\Communication\Plugin\MessageBroker;
 
-use Generated\Shared\Transfer\ScriptAddedTransfer;
+use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInterface;
 
@@ -16,20 +16,20 @@ use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInt
  * @method \Spryker\Zed\AssetExternal\Business\AssetExternalFacadeInterface getFacade()
  * @method \Spryker\Zed\AssetExternal\AssetExternalConfig getConfig()
  */
-class AssetExternalScriptAddedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
+class AssetExternalAssetUpdatedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
 {
     /**
      * {@inheritDoc}
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\ScriptAddedTransfer $scriptAddedTransfer
+     * @param \Generated\Shared\Transfer\AssetUpdatedTransfer $assetUpdatedTransfer
      *
      * @return void
      */
-    public function onScriptAdded(ScriptAddedTransfer $scriptAddedTransfer): void
+    public function onScriptUpdated(AssetUpdatedTransfer $assetUpdatedTransfer): void
     {
-        $this->getFacade()->addAsset($scriptAddedTransfer);
+        $this->getFacade()->updateAsset($assetUpdatedTransfer);
     }
 
     /**
@@ -42,6 +42,6 @@ class AssetExternalScriptAddedMessageHandlerPlugin extends AbstractPlugin implem
      */
     public function handles(): iterable
     {
-        yield ScriptAddedTransfer::class => [$this, 'onScriptAdded'];
+        yield AssetUpdatedTransfer::class => [$this, 'onScriptUpdated'];
     }
 }

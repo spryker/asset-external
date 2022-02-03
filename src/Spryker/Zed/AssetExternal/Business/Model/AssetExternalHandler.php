@@ -7,11 +7,11 @@
 
 namespace Spryker\Zed\AssetExternal\Business\Model;
 
+use Generated\Shared\Transfer\AssetAddedTransfer;
+use Generated\Shared\Transfer\AssetDeletedTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
+use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Generated\Shared\Transfer\CmsSlotCriteriaTransfer;
-use Generated\Shared\Transfer\ScriptAddedTransfer;
-use Generated\Shared\Transfer\ScriptDeletedTransfer;
-use Generated\Shared\Transfer\ScriptUpdatedTransfer;
 use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException;
@@ -74,42 +74,42 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\ScriptAddedTransfer $scriptAddedTransfer
+     * @param \Generated\Shared\Transfer\AssetAddedTransfer $assetAddedTransfer
      *
      * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function addAsset(ScriptAddedTransfer $scriptAddedTransfer): AssetExternalTransfer
+    public function addAsset(AssetAddedTransfer $assetAddedTransfer): AssetExternalTransfer
     {
-        $scriptAddedTransfer->getMessageAttributesOrFail()
+        $assetAddedTransfer->getMessageAttributesOrFail()
             ->requireAppIdentifier()
             ->requireTenantIdentifier();
 
-        $scriptAddedTransfer
-            ->requireScriptView()
-            ->requireScriptName()
-            ->requireScriptUuid()
+        $assetAddedTransfer
+            ->requireAssetView()
+            ->requireAssetName()
+            ->requireAssetIdentifier()
             ->requireSlotKey()
             ->requireStores();
 
-        $this->validateTenant($scriptAddedTransfer->getMessageAttributes()->getTenantIdentifier());
+        $this->validateTenant($assetAddedTransfer->getMessageAttributes()->getTenantIdentifier());
 
         $assetExternalTransfer = $this->assetExternalRepository
-            ->findAssetExternalByAssetUuid((string)$scriptAddedTransfer->getScriptUuid());
+            ->findAssetExternalByAssetUuid((string)$assetAddedTransfer->getAssetIdentifier());
 
         if ($assetExternalTransfer !== null) {
             throw new InvalidAssetExternalException('This asset already exists in DB.');
         }
 
-        $this->validateCmsSlot((string)$scriptAddedTransfer->getSlotKey());
+        $this->validateCmsSlot((string)$assetAddedTransfer->getSlotKey());
 
         $assetExternalTransfer = (new AssetExternalTransfer())
-            ->setAssetUuid($scriptAddedTransfer->getScriptUuid())
-            ->setAssetContent($scriptAddedTransfer->getScriptView())
-            ->setAssetName($scriptAddedTransfer->getScriptName())
-            ->setCmsSlotKey($scriptAddedTransfer->getSlotKey())
-            ->setStores($scriptAddedTransfer->getStores());
+            ->setAssetUuid($assetAddedTransfer->getAssetIdentifier())
+            ->setAssetContent($assetAddedTransfer->getAssetView())
+            ->setAssetName($assetAddedTransfer->getAssetName())
+            ->setCmsSlotKey($assetAddedTransfer->getSlotKey())
+            ->setStores($assetAddedTransfer->getStores());
 
         $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
 
@@ -124,33 +124,33 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function updateAsset(ScriptUpdatedTransfer $scriptUpdatedTransfer): AssetExternalTransfer
+    public function updateAsset(AssetUpdatedTransfer $assetUpdatedTransfer): AssetExternalTransfer
     {
-        $scriptUpdatedTransfer->getMessageAttributesOrFail()
+        $assetUpdatedTransfer->getMessageAttributesOrFail()
             ->requireAppIdentifier()
             ->requireTenantIdentifier();
 
-        $scriptUpdatedTransfer
-            ->requireScriptView()
-            ->requireScriptUuid()
+        $assetUpdatedTransfer
+            ->requireAssetView()
+            ->requireAssetIdentifier()
             ->requireSlotKey()
             ->requireStores();
 
-        $this->validateTenant($scriptUpdatedTransfer->getMessageAttributesOrFail()->getTenantIdentifier());
+        $this->validateTenant($assetUpdatedTransfer->getMessageAttributesOrFail()->getTenantIdentifier());
 
         $assetExternalTransfer = $this->assetExternalRepository
-            ->findAssetExternalByAssetUuid((string)$scriptUpdatedTransfer->getScriptUuid());
+            ->findAssetExternalByAssetUuid((string)$assetUpdatedTransfer->getAssetIdentifier());
 
         if ($assetExternalTransfer === null) {
             throw new InvalidAssetExternalException('This asset doesn\'t exist in DB.');
         }
 
-        $this->validateCmsSlot((string)$scriptUpdatedTransfer->getSlotKey());
+        $this->validateCmsSlot((string)$assetUpdatedTransfer->getSlotKey());
 
         $assetExternalTransfer
-            ->setAssetContent($scriptUpdatedTransfer->getScriptView())
-            ->setCmsSlotKey($scriptUpdatedTransfer->getSlotKey())
-            ->setStores($scriptUpdatedTransfer->getStores());
+            ->setAssetContent($assetUpdatedTransfer->getAssetView())
+            ->setCmsSlotKey($assetUpdatedTransfer->getSlotKey())
+            ->setStores($assetUpdatedTransfer->getStores());
 
         $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
 
@@ -159,30 +159,30 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\ScriptDeletedTransfer $scriptDeletedTransfer
+     * @param \Generated\Shared\Transfer\AssetDeletedTransfer $assetDeletedTransfer
      *
      * @return void
      */
-    public function deleteAsset(ScriptDeletedTransfer $scriptDeletedTransfer): void
+    public function deleteAsset(AssetDeletedTransfer $assetDeletedTransfer): void
     {
-        $scriptDeletedTransfer->getMessageAttributesOrFail()
+        $assetDeletedTransfer->getMessageAttributesOrFail()
             ->requireAppIdentifier()
             ->requireTenantIdentifier();
 
-        $scriptDeletedTransfer
-            ->requireScriptUuid()
+        $assetDeletedTransfer
+            ->requireAssetIdentifier()
             ->requireStores();
 
-        $this->validateTenant($scriptDeletedTransfer->getMessageAttributesOrFail()->getTenantIdentifier());
+        $this->validateTenant($assetDeletedTransfer->getMessageAttributesOrFail()->getTenantIdentifier());
 
         $assetExternalTransfer = $this->assetExternalRepository
-            ->findAssetExternalByAssetUuid((string)$scriptDeletedTransfer->getScriptUuid());
+            ->findAssetExternalByAssetUuid((string)$assetDeletedTransfer->getAssetIdentifier());
 
         if (!$assetExternalTransfer) {
             return;
         }
 
-        if (empty($scriptDeletedTransfer->getStores())) {
+        if (empty($assetDeletedTransfer->getStores())) {
             $this->assetExternalEntityManager->deleteAssetExternal($assetExternalTransfer);
 
             return;
@@ -190,7 +190,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
 
         $this->assetExternalEntityManager->deleteAssetExternalStores(
             $assetExternalTransfer,
-            $this->getStoreTransfersByStoreNames($scriptDeletedTransfer->getStores()),
+            $this->getStoreTransfersByStoreNames($assetDeletedTransfer->getStores()),
         );
     }
 

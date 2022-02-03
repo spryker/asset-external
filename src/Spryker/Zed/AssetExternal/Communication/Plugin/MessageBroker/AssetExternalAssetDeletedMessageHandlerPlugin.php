@@ -7,7 +7,7 @@
 
 namespace Spryker\Zed\AssetExternal\Communication\Plugin\MessageBroker;
 
-use Generated\Shared\Transfer\ScriptDeletedTransfer;
+use Generated\Shared\Transfer\AssetDeletedTransfer;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInterface;
 
@@ -16,20 +16,20 @@ use Spryker\Zed\MessageBrokerExtension\Dependency\Plugin\MessageHandlerPluginInt
  * @method \Spryker\Zed\AssetExternal\Business\AssetExternalFacadeInterface getFacade()
  * @method \Spryker\Zed\AssetExternal\AssetExternalConfig getConfig()
  */
-class AssetExternalScriptDeletedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
+class AssetExternalAssetDeletedMessageHandlerPlugin extends AbstractPlugin implements MessageHandlerPluginInterface
 {
     /**
      * {@inheritDoc}
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\ScriptDeletedTransfer $scriptDeletedTransfer
+     * @param \Generated\Shared\Transfer\AssetDeletedTransfer $assetDeletedTransfer
      *
      * @return void
      */
-    public function onScriptDeleted(ScriptDeletedTransfer $scriptDeletedTransfer): void
+    public function onScriptDeleted(AssetDeletedTransfer $assetDeletedTransfer): void
     {
-        $this->getFacade()->deleteAsset($scriptDeletedTransfer);
+        $this->getFacade()->deleteAsset($assetDeletedTransfer);
     }
 
     /**
@@ -42,6 +42,6 @@ class AssetExternalScriptDeletedMessageHandlerPlugin extends AbstractPlugin impl
      */
     public function handles(): iterable
     {
-        yield ScriptDeletedTransfer::class => [$this, 'onScriptDeleted'];
+        yield AssetDeletedTransfer::class => [$this, 'onScriptDeleted'];
     }
 }

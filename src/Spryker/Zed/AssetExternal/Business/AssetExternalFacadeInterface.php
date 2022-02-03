@@ -7,10 +7,10 @@
 
 namespace Spryker\Zed\AssetExternal\Business;
 
+use Generated\Shared\Transfer\AssetAddedTransfer;
+use Generated\Shared\Transfer\AssetDeletedTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
-use Generated\Shared\Transfer\ScriptAddedTransfer;
-use Generated\Shared\Transfer\ScriptDeletedTransfer;
-use Generated\Shared\Transfer\ScriptUpdatedTransfer;
+use Generated\Shared\Transfer\AssetUpdatedTransfer;
 
 interface AssetExternalFacadeInterface
 {
@@ -25,11 +25,11 @@ interface AssetExternalFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\ScriptAddedTransfer $scriptAddedTransfer
+     * @param \Generated\Shared\Transfer\AssetAddedTransfer $assetAddedTransfer
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function addAsset(ScriptAddedTransfer $scriptAddedTransfer): AssetExternalTransfer;
+    public function addAsset(AssetAddedTransfer $assetAddedTransfer): AssetExternalTransfer;
 
     /**
      * Specification:
@@ -42,11 +42,11 @@ interface AssetExternalFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\ScriptUpdatedTransfer $scriptUpdatedTransfer
+     * @param \Generated\Shared\Transfer\AssetUpdatedTransfer $assetUpdatedTransfer
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function updateAsset(ScriptUpdatedTransfer $scriptUpdatedTransfer): AssetExternalTransfer;
+    public function updateAsset(AssetUpdatedTransfer $assetUpdatedTransfer): AssetExternalTransfer;
 
     /**
      * Specification:
@@ -55,11 +55,11 @@ interface AssetExternalFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\ScriptDeletedTransfer $scriptDeletedTransfer
+     * @param \Generated\Shared\Transfer\AssetDeletedTransfer $assetDeletedTransfer
      *
      * @return void
      */
-    public function deleteAsset(ScriptDeletedTransfer $scriptDeletedTransfer): void;
+    public function deleteAsset(AssetDeletedTransfer $assetDeletedTransfer): void;
 
     /**
      * Specification:
