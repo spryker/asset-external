@@ -15,6 +15,7 @@ use Generated\Shared\Transfer\CmsSlotCriteriaTransfer;
 use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException;
+use Spryker\Zed\AssetExternal\Business\Mapper\AssetExternalMapperInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface;
@@ -53,24 +54,32 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     protected $assetExternalEntityManager;
 
     /**
+     * @var \Spryker\Zed\AssetExternal\Business\Mapper\AssetExternalMapperInterface
+     */
+    protected $assetExternalMapper;
+
+    /**
      * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface $storeFacade
      * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface $assetExternalEntityManager
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface $assetExternalRepository
      * @param \Spryker\Zed\AssetExternal\AssetExternalConfig $config
+     * @param \Spryker\Zed\AssetExternal\Business\Mapper\AssetExternalMapperInterface $assetExternalMapper
      */
     public function __construct(
         AssetExternalToStoreBridgeInterface $storeFacade,
         AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade,
         AssetExternalEntityManagerInterface $assetExternalEntityManager,
         AssetExternalRepositoryInterface $assetExternalRepository,
-        AssetExternalConfig $config
+        AssetExternalConfig $config,
+        AssetExternalMapperInterface $assetExternalMapper
     ) {
         $this->storeFacade = $storeFacade;
         $this->cmsSlotFacade = $cmsSlotFacade;
         $this->currentTenantIdentifier = $config->getCurrentTenantIdentifier();
         $this->assetExternalRepository = $assetExternalRepository;
         $this->assetExternalEntityManager = $assetExternalEntityManager;
+        $this->assetExternalMapper = $assetExternalMapper;
     }
 
     /**
@@ -104,12 +113,10 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
 
         $this->validateCmsSlot((string)$assetAddedTransfer->getSlotKey());
 
-        $assetExternalTransfer = (new AssetExternalTransfer())
-            ->setAssetUuid($assetAddedTransfer->getAssetIdentifier())
-            ->setAssetContent($assetAddedTransfer->getAssetView())
-            ->setAssetName($assetAddedTransfer->getAssetName())
-            ->setCmsSlotKey($assetAddedTransfer->getSlotKey())
-            ->setStores($assetAddedTransfer->getStores());
+        $assetExternalTransfer = $this->assetExternalMapper->mapAssetAddedTransferToAssetExternalTransfer(
+            $assetAddedTransfer,
+            new AssetExternalTransfer(),
+        );
 
         $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
 
@@ -118,7 +125,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\ScriptUpdatedTransfer $scriptUpdatedTransfer
+     * @param \Generated\Shared\Transfer\ScriptUpdatedTransfer $assetUpdatedTransfer
      *
      * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException
      *

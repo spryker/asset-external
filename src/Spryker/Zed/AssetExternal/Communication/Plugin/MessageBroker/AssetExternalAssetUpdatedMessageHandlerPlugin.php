@@ -27,7 +27,7 @@ class AssetExternalAssetUpdatedMessageHandlerPlugin extends AbstractPlugin imple
      *
      * @return void
      */
-    public function onScriptUpdated(AssetUpdatedTransfer $assetUpdatedTransfer): void
+    public function onAssetUpdated(AssetUpdatedTransfer $assetUpdatedTransfer): void
     {
         $this->getFacade()->updateAsset($assetUpdatedTransfer);
     }
@@ -42,6 +42,6 @@ class AssetExternalAssetUpdatedMessageHandlerPlugin extends AbstractPlugin imple
      */
     public function handles(): iterable
     {
-        yield AssetUpdatedTransfer::class => [$this, 'onScriptUpdated'];
+        yield AssetUpdatedTransfer::class => [$this, 'onAssetUpdated'];
     }
 }

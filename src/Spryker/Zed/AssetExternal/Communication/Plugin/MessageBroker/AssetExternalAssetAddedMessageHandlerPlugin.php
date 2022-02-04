@@ -27,7 +27,7 @@ class AssetExternalAssetAddedMessageHandlerPlugin extends AbstractPlugin impleme
      *
      * @return void
      */
-    public function onScriptAdded(AssetAddedTransfer $assetAddedTransfer): void
+    public function onAssetAdded(AssetAddedTransfer $assetAddedTransfer): void
     {
         $this->getFacade()->addAsset($assetAddedTransfer);
     }
@@ -42,6 +42,6 @@ class AssetExternalAssetAddedMessageHandlerPlugin extends AbstractPlugin impleme
      */
     public function handles(): iterable
     {
-        yield AssetAddedTransfer::class => [$this, 'onScriptAdded'];
+        yield AssetAddedTransfer::class => [$this, 'onAssetAdded'];
     }
 }

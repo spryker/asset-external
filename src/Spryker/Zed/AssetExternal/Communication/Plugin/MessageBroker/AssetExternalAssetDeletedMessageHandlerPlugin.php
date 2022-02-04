@@ -27,7 +27,7 @@ class AssetExternalAssetDeletedMessageHandlerPlugin extends AbstractPlugin imple
      *
      * @return void
      */
-    public function onScriptDeleted(AssetDeletedTransfer $assetDeletedTransfer): void
+    public function onAssetDeleted(AssetDeletedTransfer $assetDeletedTransfer): void
     {
         $this->getFacade()->deleteAsset($assetDeletedTransfer);
     }
@@ -42,6 +42,6 @@ class AssetExternalAssetDeletedMessageHandlerPlugin extends AbstractPlugin imple
      */
     public function handles(): iterable
     {
-        yield AssetDeletedTransfer::class => [$this, 'onScriptDeleted'];
+        yield AssetDeletedTransfer::class => [$this, 'onAssetDeleted'];
     }
 }
