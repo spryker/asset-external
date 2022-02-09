@@ -14,6 +14,7 @@ use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
 use Generated\Shared\Transfer\CmsSlotCriteriaTransfer;
 use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
+use Spryker\Zed\AssetExternal\Business\Exception\InvalidStoreReferenceException;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException;
 use Spryker\Zed\AssetExternal\Business\Model\StoreTransfer;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
@@ -91,11 +92,8 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireSlotKey()
             ->requireStoreReference();
 
-        $storeTransfer = $this->storeFacade->findStoreByStoreReference($assetAddedTransfer->getMessageAttributes()->getStoreReference());
-
-        if (!$storeTransfer) {
-            throw new InvalidTenantIdentifierException('Invalid tenant identifier.');
-        }
+        $storeTransfer = $this->storeFacade->findStoreByStoreReference($assetAddedTransfer->getStoreReference());
+        $this->validateStoreReference($storeTransfer);
 
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetAddedMessageTransfer->getScriptUuid());
@@ -110,11 +108,10 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->setAssetUuid($assetAddedMessageTransfer->getScriptUuid())
             ->setAssetContent($assetAddedMessageTransfer->getScriptView())
             ->setAssetName($assetAddedMessageTransfer->getScriptName())
-            ->setCmsSlotKey($assetAddedMessageTransfer->getSlotKey())
-            ->setStores($assetAddedMessageTransfer->getStores());
+            ->setCmsSlotKey($assetAddedMessageTransfer->getSlotKey());
 
         return $this->assetExternalEntityManager
-            ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, $storeTransfer);
+            ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, [$storeTransfer]);
     }
 
     /**
@@ -131,10 +128,10 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireScriptView()
             ->requireScriptUuid()
             ->requireSlotKey()
-            ->requireStores()
-            ->requireTenantId();
+            ->requireStoreReference();
 
-        $this->validateTenant($assetUpdatedMessageTransfer->getTenantId());
+        $storeTransfer = $this->storeFacade->findStoreByStoreReference($assetUpdatedMessageTransfer->getStoreReference());
+        $this->validateStoreReference($storeTransfer);
 
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetUpdatedMessageTransfer->getScriptUuid());
@@ -147,13 +144,10 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
 
         $assetExternalTransfer
             ->setAssetContent($assetUpdatedMessageTransfer->getScriptView())
-            ->setCmsSlotKey($assetUpdatedMessageTransfer->getSlotKey())
-            ->setStores($assetUpdatedMessageTransfer->getStores());
-
-        $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
+            ->setCmsSlotKey($assetUpdatedMessageTransfer->getSlotKey());
 
         return $this->assetExternalEntityManager
-            ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, $storeTransfers);
+            ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, [$storeTransfer]);
     }
 
     /**
@@ -167,9 +161,10 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireAppId()
             ->requireScriptUuid()
             ->requireStores()
-            ->requireTenantId();
+            ->requireStoreReference();
 
-        $this->validateTenant($assetDeletedMessageTransfer->getTenantId());
+        $storeTransfer = $this->storeFacade->findStoreByStoreReference($assetDeletedMessageTransfer->getStoreReference());
+        $this->validateStoreReference($storeTransfer);
 
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetDeletedMessageTransfer->getScriptUuid());
@@ -178,29 +173,23 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             return;
         }
 
-        if (empty($assetDeletedMessageTransfer->getStores())) {
-            $this->assetExternalEntityManager->deleteAssetExternal($assetExternalTransfer);
-
-            return;
-        }
-
         $this->assetExternalEntityManager->deleteAssetExternalStores(
             $assetExternalTransfer,
-            $this->getStoreTransfersByStoreNames($assetDeletedMessageTransfer->getStores()),
+            [$storeTransfer],
         );
     }
 
     /**
-     * @param string|null $tenantId
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
      *
      * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException
      *
      * @return void
      */
-    protected function validateTenant(?string $tenantId): void
+    protected function validateStoreReference(StoreTransfer $storeTransfer): void
     {
-        if (!$this->currentTenantIdentifier || $tenantId !== $this->currentTenantIdentifier) {
-            throw new InvalidTenantIdentifierException('Invalid tenant identifier.');
+        if (!$storeTransfer) {
+            throw new InvalidStoreReferenceException('Invalid store reference.');
         }
     }
 
@@ -222,15 +211,5 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
                 'This asset has invalid cms slot key.',
             );
         }
-    }
-
-    /**
-     * @param array<string> $storeNames
-     *
-     * @return array<\Generated\Shared\Transfer\StoreTransfer>
-     */
-    protected function getStoreTransfersByStoreNames(array $storeNames): array
-    {
-        return $this->storeFacade->getStoreTransfersByStoreNames($storeNames);
     }
 }

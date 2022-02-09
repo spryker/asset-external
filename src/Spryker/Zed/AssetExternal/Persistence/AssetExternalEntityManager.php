@@ -18,19 +18,18 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 {
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
+     * @param array<\Generated\Shared\Transfer\StoreTransfer> $storeTransfers
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
     public function saveAssetExternalAssetExternalWithAssetExternalStores(
         AssetExternalTransfer $assetExternalTransfer,
-        StoreTransfer $storeTransfer
+        array $storeTransfers
     ): AssetExternalTransfer {
         $assetExternalTransfer->requireAssetUuid()
             ->requireAssetName()
             ->requireAssetContent()
-            ->requireCmsSlotKey()
-            ->requireStoreReference();
+            ->requireCmsSlotKey();
 
         $assetExternalEntity = $this->getFactory()
             ->createAssetExternalQuery()
@@ -46,7 +45,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
         $assetExternalTransfer->setIdAssetExternal($assetExternalEntity->getIdAssetExternal());
 
-        return $this->saveAssetExternalStoreByAssetExternalTransfer($assetExternalTransfer, $storeTransfer);
+        return $this->saveAssetExternalStoreByAssetExternalTransfer($assetExternalTransfer, $storeTransfers);
     }
 
     /**
@@ -82,15 +81,15 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
+     * @param array<\Generated\Shared\Transfer\StoreTransfer> $storeTransfers
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
     protected function saveAssetExternalStoreByAssetExternalTransfer(
         AssetExternalTransfer $assetExternalTransfer,
-        StoreTransfer $storeTransfer
+        array $storeTransfers
     ): AssetExternalTransfer {
-        $assetExternalTransfer->requireIdAssetExternal()->requireStoreReference();
+        $assetExternalTransfer->requireIdAssetExternal();
 
         $storeTransferIds = [];
         foreach ($storeTransfers as $storeTransfer) {
@@ -101,7 +100,6 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
             $storeTransferIds[] = $storeTransfer->getIdStoreOrFail();
         }
-        $this->deleteStoresNotInStoreIdList($storeTransferIds, $assetExternalTransfer->getIdAssetExternalOrFail());
 
         return $assetExternalTransfer;
     }
@@ -153,7 +151,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
      */
     public function deleteAssetExternalStores(AssetExternalTransfer $assetExternalTransfer, array $storeTransfers): void
     {
-        $assetExternalTransfer->requireIdAssetExternal()->requireStores();
+        $assetExternalTransfer->requireIdAssetExternal();
 
         $storeIds = [];
         foreach ($storeTransfers as $store) {
@@ -163,21 +161,6 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
         $this->getFactory()->createAssetExternalStoreQuery()
             ->filterByFkAssetExternal($assetExternalTransfer->getIdAssetExternal())
             ->filterByFkStore_In($storeIds)
-            ->find()
-            ->delete();
-    }
-
-    /**
-     * @param array<int> $storeTransferIds
-     * @param int $idAssetExternal
-     *
-     * @return void
-     */
-    protected function deleteStoresNotInStoreIdList(array $storeTransferIds, int $idAssetExternal): void
-    {
-        $this->getFactory()->createAssetExternalStoreQuery()
-            ->filterByFkAssetExternal($idAssetExternal)
-            ->filterByFkStore($storeTransferIds, Criteria::NOT_IN)
             ->find()
             ->delete();
     }
