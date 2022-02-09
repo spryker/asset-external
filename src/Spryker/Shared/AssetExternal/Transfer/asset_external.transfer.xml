@@ -7,33 +7,30 @@
         <property name="assetName" type="string"/>
         <property name="cmsSlotKey" type="string"/>
         <property name="assetContent" type="string"/>
-        <property name="stores" type="string[]" singular="store"/>
+        <property name="storeReference" type="string"/>
     </transfer>
 
     <transfer name="AssetAddedMessage" strict="true">
-        <property name="tenantId" type="string"/>
         <property name="appId" type="string"/>
         <property name="scriptUuid" type="string"/>
         <property name="scriptName" type="string"/>
         <property name="scriptView" type="string"/>
         <property name="slotKey" type="string"/>
-        <property name="stores" type="string[]" singular="store"/>
+        <property name="storeReference" type="string"/>
     </transfer>
 
     <transfer name="AssetUpdatedMessage" strict="true">
-        <property name="tenantId" type="string"/>
         <property name="appId" type="string"/>
         <property name="scriptUuid" type="string"/>
         <property name="scriptView" type="string"/>
         <property name="slotKey" type="string"/>
-        <property name="stores" type="string[]" singular="store"/>
+        <property name="storeReference" type="string"/>
     </transfer>
 
     <transfer name="AssetDeletedMessage" strict="true">
-        <property name="tenantId" type="string"/>
         <property name="appId" type="string"/>
         <property name="scriptUuid" type="string"/>
-        <property name="stores" type="string[]" singular="store"/>
+        <property name="storeReference" type="string"/>
     </transfer>
 
     <transfer name="Store">

@@ -23,6 +23,16 @@ class AssetExternalToStoreBridge implements AssetExternalToStoreBridgeInterface
     }
 
     /**
+     * @param string $storeReference
+     *
+     * @return \Generated\Shared\Transfer\StoreTransfer|null
+     */
+    public function findStoreByStoreReference(string $storeReference): ?StoreTransfer
+    {
+        return $this->storeFacade->findStoreByStoreReference($storeNames);
+    }
+
+    /**
      * @param array<string> $storeNames
      *
      * @return array<\Generated\Shared\Transfer\StoreTransfer>

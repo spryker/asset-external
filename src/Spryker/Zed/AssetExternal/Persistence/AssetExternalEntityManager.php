@@ -18,19 +18,19 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 {
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
-     * @param array<\Generated\Shared\Transfer\StoreTransfer> $storeTransfers
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
     public function saveAssetExternalAssetExternalWithAssetExternalStores(
         AssetExternalTransfer $assetExternalTransfer,
-        array $storeTransfers
+        StoreTransfer $storeTransfer
     ): AssetExternalTransfer {
         $assetExternalTransfer->requireAssetUuid()
             ->requireAssetName()
             ->requireAssetContent()
             ->requireCmsSlotKey()
-            ->requireStores();
+            ->requireStoreReference();
 
         $assetExternalEntity = $this->getFactory()
             ->createAssetExternalQuery()
@@ -46,7 +46,7 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
         $assetExternalTransfer->setIdAssetExternal($assetExternalEntity->getIdAssetExternal());
 
-        return $this->saveAssetExternalStoreByAssetExternalTransfer($assetExternalTransfer, $storeTransfers);
+        return $this->saveAssetExternalStoreByAssetExternalTransfer($assetExternalTransfer, $storeTransfer);
     }
 
     /**
@@ -82,15 +82,15 @@ class AssetExternalEntityManager extends AbstractEntityManager implements AssetE
 
     /**
      * @param \Generated\Shared\Transfer\AssetExternalTransfer $assetExternalTransfer
-     * @param array<\Generated\Shared\Transfer\StoreTransfer> $storeTransfers
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
     protected function saveAssetExternalStoreByAssetExternalTransfer(
         AssetExternalTransfer $assetExternalTransfer,
-        array $storeTransfers
+        StoreTransfer $storeTransfer
     ): AssetExternalTransfer {
-        $assetExternalTransfer->requireIdAssetExternal()->requireStores();
+        $assetExternalTransfer->requireIdAssetExternal()->requireStoreReference();
 
         $storeTransferIds = [];
         foreach ($storeTransfers as $storeTransfer) {

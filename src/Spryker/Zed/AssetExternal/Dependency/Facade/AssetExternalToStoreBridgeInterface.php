@@ -10,6 +10,13 @@ namespace Spryker\Zed\AssetExternal\Dependency\Facade;
 interface AssetExternalToStoreBridgeInterface
 {
     /**
+     * @param string $storeReference
+     *
+     * @return \Generated\Shared\Transfer\StoreTransfer|null
+     */
+    public function findStoreByStoreReference(string $storeReference): ?StoreTransfer;
+
+    /**
      * @param array<string> $storeNames
      *
      * @return array<\Generated\Shared\Transfer\StoreTransfer>
