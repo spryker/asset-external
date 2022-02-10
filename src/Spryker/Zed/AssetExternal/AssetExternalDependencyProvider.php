@@ -9,6 +9,7 @@ namespace Spryker\Zed\AssetExternal;
 
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridge;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridge;
+use Spryker\Zed\AssetExternal\Dependency\Service\AssetExternalToStoreReferenceBridge;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 
@@ -28,6 +29,11 @@ class AssetExternalDependencyProvider extends AbstractBundleDependencyProvider
     public const FACADE_CMS_SLOT = 'FACADE_CMS_SLOT';
 
     /**
+     * @var string
+     */
+    public const SERVICE_STORE_REFERENCE = 'SERVICE_STORE_REFERENCE';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -37,6 +43,21 @@ class AssetExternalDependencyProvider extends AbstractBundleDependencyProvider
         $container = parent::provideBusinessLayerDependencies($container);
         $container = $this->addStoreFacade($container);
         $container = $this->addCmsSlotFacade($container);
+        $container = $this->addStoreReferenceService($container);
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addStoreReferenceService(Container $container): Container
+    {
+        $container->set(static::SERVICE_STORE_REFERENCE, function (Container $container) {
+            return new AssetExternalToStoreReferenceBridge($container->getLocator()->storeReference()->service());
+        });
 
         return $container;
     }
