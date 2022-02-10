@@ -12,7 +12,7 @@ use Spryker\Zed\AssetExternal\Business\Model\AssetExternalHandler;
 use Spryker\Zed\AssetExternal\Business\Model\AssetExternalHandlerInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface;
-use Spryker\Zed\AssetExternal\Dependency\Service\AssetExternalToStoreReferenceInterface;
+use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
 /**
@@ -32,7 +32,7 @@ class AssetExternalBusinessFactory extends AbstractBusinessFactory
             $this->getEntityManager(),
             $this->getRepository(),
             $this->getConfig(),
-            $this->getStoreReferenceService(),
+            $this->getStoreReferenceFacade(),
         );
     }
 
@@ -45,9 +45,9 @@ class AssetExternalBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\AssetExternal\Dependency\Service\AssetExternalToStoreReferenceInterface
+     * @return \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface
      */
-    public function getStoreReferenceService(): AssetExternalToStoreReferenceInterface
+    public function getStoreReferenceFacade(): AssetExternalToStoreReferenceInterface
     {
         return $this->getProvidedDependency(AssetExternalDependencyProvider::SERVICE_STORE_REFERENCE);
     }

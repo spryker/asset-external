@@ -17,7 +17,7 @@ use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException;
 use Spryker\Zed\AssetExternal\Business\Model\StoreTransfer;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
-use Spryker\Zed\AssetExternal\Dependency\Service\AssetExternalToStoreReferenceInterface;
+use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface;
 
@@ -49,29 +49,29 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     protected $assetExternalEntityManager;
 
     /**
-     * @var \Spryker\Zed\AssetExternal\Dependency\Service\AssetExternalToStoreReferenceInterface
+     * @var \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface
      */
-    protected $storeReferenceService;
+    protected $storeReferenceFacade;
 
     /**
      * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface $assetExternalEntityManager
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface $assetExternalRepository
      * @param \Spryker\Zed\AssetExternal\AssetExternalConfig $config
-     * @param \Spryker\Zed\AssetExternal\Dependency\Service\AssetExternalToStoreReferenceInterface $storeReferenceService
+     * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface $storeReferenceFacade
      */
     public function __construct(
         AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade,
         AssetExternalEntityManagerInterface $assetExternalEntityManager,
         AssetExternalRepositoryInterface $assetExternalRepository,
         AssetExternalConfig $config,
-        AssetExternalToStoreReferenceInterface $storeReferenceService
+        AssetExternalToStoreReferenceInterface $storeReferenceFacade
     ) {
         $this->cmsSlotFacade = $cmsSlotFacade;
         $this->currentTenantIdentifier = $config->getCurrentTenantIdentifier();
         $this->assetExternalRepository = $assetExternalRepository;
         $this->assetExternalEntityManager = $assetExternalEntityManager;
-        $this->storeReferenceService = $storeReferenceService;
+        $this->storeReferenceFacade = $storeReferenceFacade;
     }
 
     /**
@@ -91,7 +91,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireSlotKey()
             ->requireStoreReference();
 
-        $storeTransfer = $this->storeReferenceService->getStoreByStoreReference($assetAddedMessageTransfer->getStoreReference());
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetAddedMessageTransfer->getStoreReference());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetAddedMessageTransfer->getScriptUuid());
 
@@ -127,7 +127,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireSlotKey()
             ->requireStoreReference();
 
-        $storeTransfer = $this->storeReferenceService->getStoreByStoreReference($assetUpdatedMessageTransfer->getStoreReference());
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetUpdatedMessageTransfer->getStoreReference());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetUpdatedMessageTransfer->getScriptUuid());
 
@@ -157,7 +157,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireScriptUuid()
             ->requireStoreReference();
 
-        $storeTransfer = $this->storeReferenceService->getStoreByStoreReference($assetDeletedMessageTransfer->getStoreReference());
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetDeletedMessageTransfer->getStoreReference());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetDeletedMessageTransfer->getScriptUuid());
 

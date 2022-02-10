@@ -5,17 +5,16 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\AssetExternal\Dependency\Service;
+namespace Spryker\Zed\AssetExternal\Dependency\Facade;
 
 use Generated\Shared\Transfer\StoreTransfer;
 
 interface AssetExternalToStoreReferenceInterface
 {
-
     /**
      * @param string $storeReference
      *
-     * @throws \Spryker\Service\StoreReference\Exception\StoreReferenceNotFoundException
+     * @throws \Spryker\Zed\StoreReference\Business\Exception\StoreReferenceNotFoundException
      *
      * @return \Generated\Shared\Transfer\StoreTransfer
      */
@@ -24,7 +23,7 @@ interface AssetExternalToStoreReferenceInterface
     /**
      * @param string $storeName
      *
-     * @throws \Spryker\Service\StoreReference\Exception\StoreReferenceNotFoundException
+     * @throws \Spryker\Zed\StoreReference\Business\Exception\StoreReferenceNotFoundException
      *
      * @return \Generated\Shared\Transfer\StoreTransfer|null
      */

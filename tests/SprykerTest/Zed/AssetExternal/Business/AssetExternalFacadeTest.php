@@ -13,7 +13,7 @@ use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
 use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
 use Ramsey\Uuid\Uuid;
-use Spryker\Service\StoreReference\Exception\StoreReferenceNotFoundException;
+use Spryker\Zed\StoreReference\Business\Exception\StoreReferenceNotFoundException;
 use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
 use Spryker\Zed\AssetExternal\Business\AssetExternalBusinessFactory;
