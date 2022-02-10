@@ -91,7 +91,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireSlotKey()
             ->requireStoreReference();
 
-        $storeTransfer = $this->storeReferenceService->getStoreByStoreReference($assetAddedTransfer->getStoreReference());
+        $storeTransfer = $this->storeReferenceService->getStoreByStoreReference($assetAddedMessageTransfer->getStoreReference());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetAddedMessageTransfer->getScriptUuid());
 
@@ -127,7 +127,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireSlotKey()
             ->requireStoreReference();
 
-        $storeTransfer = $this->storeReferenceService->findStoreByStoreReference($assetUpdatedMessageTransfer->getStoreReference());
+        $storeTransfer = $this->storeReferenceService->getStoreByStoreReference($assetUpdatedMessageTransfer->getStoreReference());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetUpdatedMessageTransfer->getScriptUuid());
 
@@ -155,10 +155,9 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
         $assetDeletedMessageTransfer
             ->requireAppId()
             ->requireScriptUuid()
-            ->requireStores()
             ->requireStoreReference();
 
-        $storeTransfer = $this->storeReferenceService->findStoreByStoreReference($assetDeletedMessageTransfer->getStoreReference());
+        $storeTransfer = $this->storeReferenceService->getStoreByStoreReference($assetDeletedMessageTransfer->getStoreReference());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetDeletedMessageTransfer->getScriptUuid());
 
@@ -166,6 +165,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             return;
         }
 
+        $this->assetExternalEntityManager->deleteAssetExternal($assetExternalTransfer);
         $this->assetExternalEntityManager->deleteAssetExternalStores(
             $assetExternalTransfer,
             [$storeTransfer],
