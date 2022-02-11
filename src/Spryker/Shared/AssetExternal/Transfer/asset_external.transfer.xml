@@ -34,6 +34,8 @@
 
     <transfer name="Store">
         <property name="idStore" type="int"/>
+        <property name="name" type="string"/>
+        <property name="storeReference" type="string"/>
     </transfer>
 
     <transfer name="CmsSlotCriteria">

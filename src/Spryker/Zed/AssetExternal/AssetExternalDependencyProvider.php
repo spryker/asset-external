@@ -9,7 +9,7 @@ namespace Spryker\Zed\AssetExternal;
 
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridge;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridge;
-use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceBridge;
+use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceFacadeBridge;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 
@@ -56,7 +56,7 @@ class AssetExternalDependencyProvider extends AbstractBundleDependencyProvider
     protected function addStoreReferenceService(Container $container): Container
     {
         $container->set(static::SERVICE_STORE_REFERENCE, function (Container $container) {
-            return new AssetExternalToStoreReferenceBridge($container->getLocator()->storeReference()->facade());
+            return new AssetExternalToStoreReferenceFacadeBridge($container->getLocator()->storeReference()->facade());
         });
 
         return $container;

@@ -10,7 +10,7 @@ namespace Spryker\Zed\AssetExternal\Dependency\Facade;
 use Generated\Shared\Transfer\StoreTransfer;
 use Spryker\Zed\StoreReference\Business\StoreReferenceFacadeInterface;
 
-class AssetExternalToStoreReferenceBridge implements AssetExternalToStoreReferenceInterface
+class AssetExternalToStoreReferenceFacadeBridge implements AssetExternalToStoreReferenceInterface
 {
     /**
      * @var \Spryker\Zed\StoreReference\Business\StoreReferenceFacadeInterface
