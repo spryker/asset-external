@@ -14,8 +14,6 @@ use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
 use Generated\Shared\Transfer\CmsSlotCriteriaTransfer;
 use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
-use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException;
-use Spryker\Zed\AssetExternal\Business\Model\StoreTransfer;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface;
@@ -91,7 +89,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireSlotKey()
             ->requireStoreReference();
 
-        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetAddedMessageTransfer->getStoreReference());
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetAddedMessageTransfer->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetAddedMessageTransfer->getScriptUuid());
 
@@ -127,7 +125,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireSlotKey()
             ->requireStoreReference();
 
-        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetUpdatedMessageTransfer->getStoreReference());
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetUpdatedMessageTransfer->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetUpdatedMessageTransfer->getScriptUuid());
 
@@ -157,7 +155,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireScriptUuid()
             ->requireStoreReference();
 
-        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetDeletedMessageTransfer->getStoreReference());
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetDeletedMessageTransfer->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetDeletedMessageTransfer->getScriptUuid());
 

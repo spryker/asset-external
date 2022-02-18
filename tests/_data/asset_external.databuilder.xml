@@ -9,5 +9,6 @@
         <property name="assetName" type="string" dataBuilderRule="word()"/>
         <property name="cmsSlotKey" type="string" dataBuilderRule="=external-asset-header-test"/>
         <property name="assetContent" type="string" dataBuilderRule="word()"/>
+        <property name="stores" type="string[]" dataBuilderRule="shuffle(array('DE', 'EN'))"/>
     </transfer>
 </transfers>

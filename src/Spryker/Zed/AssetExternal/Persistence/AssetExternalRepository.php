@@ -73,6 +73,10 @@ class AssetExternalRepository extends AbstractRepository implements AssetExterna
             ->filterByFkAssetExternal($assetExternalEntity->getIdAssetExternal())
             ->find();
 
+        foreach ($assetExternalStoreEntities as $assetExternalStoreEntity) {
+            $assetExternalTransfer->addStore((string)$assetExternalStoreEntity->getSpyStore()->getName());
+        }
+
         return $assetExternalTransfer;
     }
 }

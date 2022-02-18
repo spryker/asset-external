@@ -8,7 +8,6 @@
 namespace Spryker\Zed\AssetExternal\Dependency\Facade;
 
 use Generated\Shared\Transfer\StoreTransfer;
-use Spryker\Zed\StoreReference\Business\StoreReferenceFacadeInterface;
 
 class AssetExternalToStoreReferenceFacadeBridge implements AssetExternalToStoreReferenceInterface
 {
@@ -28,8 +27,6 @@ class AssetExternalToStoreReferenceFacadeBridge implements AssetExternalToStoreR
     /**
      * @param string $storeReference
      *
-     * @throws \Spryker\Zed\StoreReference\Business\Exception\StoreReferenceNotFoundException
-     *
      * @return \Generated\Shared\Transfer\StoreTransfer
      */
     public function getStoreByStoreReference(string $storeReference): StoreTransfer
@@ -39,8 +36,6 @@ class AssetExternalToStoreReferenceFacadeBridge implements AssetExternalToStoreR
 
     /**
      * @param string $storeName
-     *
-     * @throws \Spryker\Zed\StoreReference\Business\Exception\StoreReferenceNotFoundException
      *
      * @return \Generated\Shared\Transfer\StoreTransfer
      */

@@ -25,7 +25,7 @@ interface AssetExternalToStoreReferenceInterface
      *
      * @throws \Spryker\Zed\StoreReference\Business\Exception\StoreReferenceNotFoundException
      *
-     * @return \Generated\Shared\Transfer\StoreTransfer|null
+     * @return \Generated\Shared\Transfer\StoreTransfer
      */
     public function getStoreByStoreName(string $storeName): StoreTransfer;
 }

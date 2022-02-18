@@ -7,6 +7,7 @@
         <property name="assetName" type="string"/>
         <property name="cmsSlotKey" type="string"/>
         <property name="assetContent" type="string"/>
+        <property name="stores" type="string[]" singular="store"/>
     </transfer>
 
     <transfer name="AssetAddedMessage" strict="true">

@@ -8,7 +8,6 @@
 namespace Spryker\Zed\AssetExternal\Persistence;
 
 use Generated\Shared\Transfer\AssetExternalTransfer;
-use Propel\Runtime\ActiveQuery\Criteria;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
 
 /**
