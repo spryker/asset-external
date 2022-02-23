@@ -86,8 +86,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireScriptView()
             ->requireScriptName()
             ->requireScriptUuid()
-            ->requireSlotKey()
-            ->requireStoreReference();
+            ->requireSlotKey();
 
         $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetAddedMessageTransfer->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
@@ -122,8 +121,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireAppId()
             ->requireScriptView()
             ->requireScriptUuid()
-            ->requireSlotKey()
-            ->requireStoreReference();
+            ->requireSlotKey();
 
         $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetUpdatedMessageTransfer->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
@@ -152,8 +150,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     {
         $assetDeletedMessageTransfer
             ->requireAppId()
-            ->requireScriptUuid()
-            ->requireStoreReference();
+            ->requireScriptUuid();
 
         $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetDeletedMessageTransfer->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
