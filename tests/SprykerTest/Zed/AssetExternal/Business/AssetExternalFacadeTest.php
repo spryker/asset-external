@@ -11,7 +11,6 @@ use Codeception\Test\Unit;
 use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
 use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
-use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
 use Spryker\Zed\AssetExternal\Business\AssetExternalBusinessFactory;
 use Spryker\Zed\AssetExternal\Business\AssetExternalFacadeInterface;
@@ -207,15 +206,11 @@ class AssetExternalFacadeTest extends Unit
         $assetExternalFacade = $this->tester->getFacade();
 
         $container = new Container();
-        $assetExternalConfig = $this->getMockBuilder(AssetExternalConfig::class)->getMock();
-
-        $assetExternalConfig->method('getCurrentStoreReference')->willReturn(static::STORE_REFERENCE);
 
         $assetExternalBusinessFactory = new AssetExternalBusinessFactory();
         $dependencyProvider = new AssetExternalDependencyProvider();
         $dependencyProvider->provideBusinessLayerDependencies($container);
         $assetExternalBusinessFactory->setContainer($container);
-        $assetExternalBusinessFactory->setConfig($assetExternalConfig);
         $assetExternalFacade->setFactory($assetExternalBusinessFactory);
 
         return $assetExternalFacade;

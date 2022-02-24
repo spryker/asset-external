@@ -31,7 +31,6 @@ class AssetExternalBusinessFactory extends AbstractBusinessFactory
             $this->getCmsSlotFacade(),
             $this->getEntityManager(),
             $this->getRepository(),
-            $this->getConfig(),
             $this->getStoreReferenceFacade(),
         );
     }

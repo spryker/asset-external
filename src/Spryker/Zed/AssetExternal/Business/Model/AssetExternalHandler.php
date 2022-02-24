@@ -12,7 +12,6 @@ use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
 use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
 use Generated\Shared\Transfer\CmsSlotCriteriaTransfer;
-use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface;
@@ -50,14 +49,12 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface $assetExternalEntityManager
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface $assetExternalRepository
-     * @param \Spryker\Zed\AssetExternal\AssetExternalConfig $config
      * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface $storeReferenceFacade
      */
     public function __construct(
         AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade,
         AssetExternalEntityManagerInterface $assetExternalEntityManager,
         AssetExternalRepositoryInterface $assetExternalRepository,
-        AssetExternalConfig $config,
         AssetExternalToStoreReferenceInterface $storeReferenceFacade
     ) {
         $this->cmsSlotFacade = $cmsSlotFacade;
