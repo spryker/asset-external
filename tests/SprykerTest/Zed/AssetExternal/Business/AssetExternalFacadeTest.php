@@ -209,7 +209,7 @@ class AssetExternalFacadeTest extends Unit
         $container = new Container();
         $assetExternalConfig = $this->getMockBuilder(AssetExternalConfig::class)->getMock();
 
-        $assetExternalConfig->method('getCurrentTenantIdentifier')->willReturn(static::STORE_REFERENCE);
+        $assetExternalConfig->method('getCurrentStoreReference')->willReturn(static::STORE_REFERENCE);
 
         $assetExternalBusinessFactory = new AssetExternalBusinessFactory();
         $dependencyProvider = new AssetExternalDependencyProvider();

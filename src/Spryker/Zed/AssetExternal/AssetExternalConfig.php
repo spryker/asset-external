@@ -16,7 +16,7 @@ class AssetExternalConfig extends AbstractBundleConfig
      *
      * @return string
      */
-    public function getCurrentTenantIdentifier(): string
+    public function getCurrentStoreReference(): string
     {
         $beHostInsteadOfTenantIdentifier = getenv('SPRYKER_BE_HOST') !== false ? getenv('SPRYKER_BE_HOST') : 'TENANT_IDENTIFIER_UNDEFINED';
 

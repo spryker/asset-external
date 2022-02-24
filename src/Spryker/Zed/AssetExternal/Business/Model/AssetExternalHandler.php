@@ -32,11 +32,6 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     protected $cmsSlotFacade;
 
     /**
-     * @var string
-     */
-    protected $currentTenantIdentifier;
-
-    /**
      * @var \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface
      */
     protected $assetExternalRepository;
@@ -66,7 +61,6 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
         AssetExternalToStoreReferenceInterface $storeReferenceFacade
     ) {
         $this->cmsSlotFacade = $cmsSlotFacade;
-        $this->currentTenantIdentifier = $config->getCurrentTenantIdentifier();
         $this->assetExternalRepository = $assetExternalRepository;
         $this->assetExternalEntityManager = $assetExternalEntityManager;
         $this->storeReferenceFacade = $storeReferenceFacade;
