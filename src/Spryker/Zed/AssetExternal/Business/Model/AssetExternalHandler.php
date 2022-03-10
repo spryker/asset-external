@@ -12,12 +12,11 @@ use Generated\Shared\Transfer\AssetDeletedTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
 use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Generated\Shared\Transfer\CmsSlotCriteriaTransfer;
-use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException;
 use Spryker\Zed\AssetExternal\Business\Mapper\AssetExternalMapperInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
-use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface;
+use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface;
 
@@ -29,19 +28,9 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     protected const EXPECTED_CMS_SLOT_COUNT_WITH_REQUESTED_KEY = 1;
 
     /**
-     * @var \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface
-     */
-    protected $storeFacade;
-
-    /**
      * @var \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface
      */
     protected $cmsSlotFacade;
-
-    /**
-     * @var string
-     */
-    protected $currentTenantIdentifier;
 
     /**
      * @var \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface
@@ -65,21 +54,28 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface $assetExternalRepository
      * @param \Spryker\Zed\AssetExternal\AssetExternalConfig $config
      * @param \Spryker\Zed\AssetExternal\Business\Mapper\AssetExternalMapperInterface $assetExternalMapper
+     * @var \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface
+     */
+    protected $storeReferenceFacade;
+
+    /**
+     * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade
+     * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface $assetExternalEntityManager
+     * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface $assetExternalRepository
+     * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface $storeReferenceFacade
      */
     public function __construct(
-        AssetExternalToStoreBridgeInterface $storeFacade,
         AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade,
         AssetExternalEntityManagerInterface $assetExternalEntityManager,
         AssetExternalRepositoryInterface $assetExternalRepository,
-        AssetExternalConfig $config,
-        AssetExternalMapperInterface $assetExternalMapper
+        AssetExternalMapperInterface $assetExternalMapper,
+        AssetExternalToStoreReferenceInterface $storeReferenceFacade
     ) {
-        $this->storeFacade = $storeFacade;
         $this->cmsSlotFacade = $cmsSlotFacade;
-        $this->currentTenantIdentifier = $config->getCurrentTenantIdentifier();
-        $this->assetExternalRepository = $assetExternalRepository;
         $this->assetExternalEntityManager = $assetExternalEntityManager;
+        $this->assetExternalRepository = $assetExternalRepository;
         $this->assetExternalMapper = $assetExternalMapper;
+        $this->storeReferenceFacade = $storeReferenceFacade;
     }
 
     /**
@@ -93,17 +89,15 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     {
         $assetAddedTransfer->getMessageAttributesOrFail()
             ->requireAppIdentifier()
-            ->requireTenantIdentifier();
+            ->requireStoreReference();
 
         $assetAddedTransfer
             ->requireAssetView()
             ->requireAssetName()
             ->requireAssetIdentifier()
-            ->requireSlotKey()
-            ->requireStores();
+            ->requireSlotKey();
 
-        $this->validateTenant($assetAddedTransfer->getMessageAttributes()->getTenantIdentifier());
-
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetAddedTransfer->getMessageAttributes()->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetAddedTransfer->getAssetIdentifier());
 
@@ -118,10 +112,8 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             new AssetExternalTransfer(),
         );
 
-        $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
-
         return $this->assetExternalEntityManager
-            ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, $storeTransfers);
+            ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, [$storeTransfer]);
     }
 
     /**
@@ -135,16 +127,14 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     {
         $assetUpdatedTransfer->getMessageAttributesOrFail()
             ->requireAppIdentifier()
-            ->requireTenantIdentifier();
+            ->requireStoreReference();
 
         $assetUpdatedTransfer
             ->requireAssetView()
             ->requireAssetIdentifier()
-            ->requireSlotKey()
-            ->requireStores();
+            ->requireSlotKey();
 
-        $this->validateTenant($assetUpdatedTransfer->getMessageAttributesOrFail()->getTenantIdentifier());
-
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetUpdatedTransfer->getMessageAttributes()->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetUpdatedTransfer->getAssetIdentifier());
 
@@ -156,13 +146,10 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
 
         $assetExternalTransfer
             ->setAssetContent($assetUpdatedTransfer->getAssetView())
-            ->setCmsSlotKey($assetUpdatedTransfer->getSlotKey())
-            ->setStores($assetUpdatedTransfer->getStores());
-
-        $storeTransfers = $this->getStoreTransfersByStoreNames($assetExternalTransfer->getStores());
+            ->setCmsSlotKey($assetUpdatedTransfer->getSlotKey());
 
         return $this->assetExternalEntityManager
-            ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, $storeTransfers);
+            ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, [$storeTransfer]);
     }
 
     /**
@@ -174,14 +161,12 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     {
         $assetDeletedTransfer->getMessageAttributesOrFail()
             ->requireAppIdentifier()
-            ->requireTenantIdentifier();
+            ->requireStoreReference();
 
         $assetDeletedTransfer
-            ->requireAssetIdentifier()
-            ->requireStores();
+            ->requireAssetIdentifier();
 
-        $this->validateTenant($assetDeletedTransfer->getMessageAttributesOrFail()->getTenantIdentifier());
-
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetDeletedTransfer->getMessageAttributes()->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetDeletedTransfer->getAssetIdentifier());
 
@@ -189,30 +174,11 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             return;
         }
 
-        if (empty($assetDeletedTransfer->getStores())) {
-            $this->assetExternalEntityManager->deleteAssetExternal($assetExternalTransfer);
-
-            return;
-        }
-
+        $this->assetExternalEntityManager->deleteAssetExternal($assetExternalTransfer);
         $this->assetExternalEntityManager->deleteAssetExternalStores(
             $assetExternalTransfer,
-            $this->getStoreTransfersByStoreNames($assetDeletedTransfer->getStores()),
+            [$storeTransfer],
         );
-    }
-
-    /**
-     * @param string|null $tenantId
-     *
-     * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException
-     *
-     * @return void
-     */
-    protected function validateTenant(?string $tenantId): void
-    {
-        if (!$this->currentTenantIdentifier || $tenantId !== $this->currentTenantIdentifier) {
-            throw new InvalidTenantIdentifierException('Invalid tenant identifier.');
-        }
     }
 
     /**
@@ -233,15 +199,5 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
                 'This asset has invalid cms slot key.',
             );
         }
-    }
-
-    /**
-     * @param array<string> $storeNames
-     *
-     * @return array<\Generated\Shared\Transfer\StoreTransfer>
-     */
-    protected function getStoreTransfersByStoreNames(array $storeNames): array
-    {
-        return $this->storeFacade->getStoreTransfersByStoreNames($storeNames);
     }
 }

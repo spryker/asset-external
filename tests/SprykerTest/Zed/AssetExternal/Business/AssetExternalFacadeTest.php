@@ -15,12 +15,14 @@ use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Ramsey\Uuid\Uuid;
 use Spryker\Zed\AssetExternal\AssetExternalConfig;
+use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
+use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
 use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
 use Spryker\Zed\AssetExternal\Business\AssetExternalBusinessFactory;
 use Spryker\Zed\AssetExternal\Business\AssetExternalFacadeInterface;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
-use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException;
 use Spryker\Zed\Kernel\Container;
+use Spryker\Zed\StoreReference\Business\Exception\StoreReferenceNotFoundException;
 
 /**
  * Auto-generated group annotations
@@ -38,7 +40,7 @@ class AssetExternalFacadeTest extends Unit
     /**
      * @var string
      */
-    protected $tenantIdentifier;
+    protected const STORE_REFERENCE = 'development_test-DE';
 
     /**
      * @var string
@@ -56,24 +58,23 @@ class AssetExternalFacadeTest extends Unit
     public function setUp(): void
     {
         parent::setUp();
-        $this->tenantIdentifier = $this->getUuid();
-        $this->assetUuid = $this->getUuid();
+        $this->assetUuid = $this->tester->getUuid();
     }
 
     /**
      * @return void
      */
-    public function testAddAssetAssertThrowsExceptionWhentenantIdentifierInvalid(): void
+    public function testAddAssetAssertThrowsExceptionWhenStoreReferenceIsInvalid(): void
     {
         // Arrange
-        $scriptAddedTransfer = $this->buildScriptAddedTransfer($this->getUuid());
+        $assetAddedTransfer = $this->tester->buildAssetAddedTransfer('1', 'test', $this->assetUuid);
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
-        $this->expectException(InvalidTenantIdentifierException::class);
+        $this->expectException(StoreReferenceNotFoundException::class);
 
         // Act
-        $assetExternalFacade->addAsset($scriptAddedTransfer);
+        $assetExternalFacade->addAsset($assetAddedTransfer);
     }
 
     /**
@@ -82,33 +83,30 @@ class AssetExternalFacadeTest extends Unit
     public function testAddAssetAssertThrowsExceptionWhenExternalAssetInvalid(): void
     {
         // Arrange
-        $scriptAddedTransfer = $this->buildScriptAddedTransfer($this->tenantIdentifier);
+        $assetAddedTransfer = $this->tester->buildAssetAddedTransfer(static::STORE_REFERENCE, 'test', $this->assetUuid);
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
         $this->expectException(InvalidAssetExternalException::class);
 
         // Act
-        $assetExternalFacade->addAsset($scriptAddedTransfer);
+        $assetExternalFacade->addAsset($assetAddedTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testAddAssetAssertSuccessfull(): void
     {
         // Arrange
-        $scriptAddedTransfer = $this->buildScriptAddedTransfer($this->tenantIdentifier, 'slt-footer');
+        $assetMessageTransfer = $this->tester->buildAssetAddedTransfer(static::STORE_REFERENCE, 'slt-footer', $this->assetUuid);
+
         $assetExternalFacade = $this->getAssetExternalFacade();
         $expectedAssetTransfer = (new AssetExternalTransfer())->setCmsSlotKey('slt-footer')
-            ->setStores(['US', 'DE'])
             ->setAssetName('test')
             ->setAssetContent('<script>')
             ->setIdAssetExternal(1)
             ->setAssetUuid($this->assetUuid);
 
         // Act
-        $assetTransfer = $assetExternalFacade->addAsset($scriptAddedTransfer);
+        $assetTransfer = $assetExternalFacade->addAsset($assetMessageTransfer);
         $assetTransfer->setIdAssetExternal(1)->setCmsSlotKey('slt-footer');
 
         // Assert
@@ -118,17 +116,17 @@ class AssetExternalFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testUpdateAssetAssertThrowsExceptionWhenTenantIdentifierInvalid(): void
+    public function testUpdateAssetAssertThrowsExceptionWhenStoreReferenceIsInvalid(): void
     {
         // Arrange
-        $scriptUpdatedTransfer = $this->buildScriptUpdatedTransfer($this->getUuid());
+        $assetUpdatedTransfer = $this->tester->buildAssetUpdatedTransfer('1');
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
-        $this->expectException(InvalidTenantIdentifierException::class);
+        $this->expectException(StoreReferenceNotFoundException::class);
 
         // Act
-        $assetExternalFacade->updateAsset($scriptUpdatedTransfer);
+        $assetExternalFacade->updateAsset($assetUpdatedTransfer);
     }
 
     /**
@@ -138,28 +136,26 @@ class AssetExternalFacadeTest extends Unit
     {
         // Arrange
         $assetExternalFacade = $this->getAssetExternalFacade();
-        $scriptAddedTransfer = $this->buildScriptAddedTransfer($this->tenantIdentifier, 'slt-footer');
-        $scriptUpdatedTransfer = (new AssetUpdatedTransfer())
+        $startAssetMessageTransfer = $this->tester->buildAssetAddedTransfer(static::STORE_REFERENCE, 'slt-footer', $this->assetUuid);
+        $newAssetMessageTransfer = (new AssetUpdatedTransfer())
             ->setAssetView('<script> </script>')
             ->setAssetIdentifier($this->assetUuid)
             ->setSlotKey('slt-footer')
-            ->setStores(['US'])
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setTenantIdentifier($this->tenantIdentifier)
-                    ->setAppIdentifier($this->getUuid())
-            );
+                    ->setAppIdentifier($this->tester->getUuid())
+                    ->setStoreReference(static::STORE_REFERENCE));
+
         $expectedAssetTransfer = (new AssetExternalTransfer())->setCmsSlotKey('slt-footer')
-            ->setStores(['US'])
             ->setAssetName('test')
             ->setAssetContent('<script> </script>')
             ->setIdAssetExternal(1)
             ->setAssetUuid($this->assetUuid);
 
         // Act
-        $assetExternalFacade->addAsset($scriptAddedTransfer);
+        $assetExternalFacade->addAsset($startAssetMessageTransfer);
 
-        $assetTransfer = $assetExternalFacade->updateAsset($scriptUpdatedTransfer);
+        $assetTransfer = $assetExternalFacade->updateAsset($newAssetMessageTransfer);
         $assetTransfer->setIdAssetExternal(1)->setCmsSlotKey('slt-footer');
 
         // Assert
@@ -169,17 +165,17 @@ class AssetExternalFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testDeleteAssetAssertThrowsExceptionWhenTenantIdentifierInvalid(): void
+    public function testDeleteAssetAssertThrowsExceptionWhenStoreReferenceIsInvalid(): void
     {
         // Arrange
-        $scriptDeletedTransfer = $this->buildScriptDeletedTransfer($this->getUuid());
+        $assetDeletedTransfer = $this->tester->buildAssetDeletedMessageTransfer('1');
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
-        $this->expectException(InvalidTenantIdentifierException::class);
+        $this->expectException(StoreReferenceNotFoundException::class);
 
         // Act
-        $assetExternalFacade->deleteAsset($scriptDeletedTransfer);
+        $assetExternalFacade->deleteAsset($assetDeletedTransfer);
     }
 
     /**
@@ -189,23 +185,22 @@ class AssetExternalFacadeTest extends Unit
     {
         // Arrange
         $assetExternalFacade = $this->getAssetExternalFacade();
-        $scriptAddedTransfer = $this->buildScriptAddedTransfer($this->tenantIdentifier, 'slt-footer');
-        $scriptDeletedTransfer = (new AssetDeletedTransfer())
+        $startAssetMessageTransfer = $this->tester->buildAssetAddedTransfer(static::STORE_REFERENCE, 'slt-footer', $this->assetUuid);
+        $delAssetMessageTransfer = (new AssetDeletedTransfer())
             ->setAssetIdentifier($this->assetUuid)
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setTenantIdentifier($this->tenantIdentifier)
-                    ->setAppIdentifier($this->getUuid())
-            );;
-        $scriptUpdatedTransfer = $this->buildScriptUpdatedTransfer($this->tenantIdentifier, 'slt-footer', $this->assetUuid);
-        $assetExternalFacade->addAsset($scriptAddedTransfer);
+                    ->setAppIdentifier($this->tester->getUuid())
+                    ->setStoreReference(static::STORE_REFERENCE));
+        $updateCheckMessageTransfer = $this->tester->buildAssetUpdatedTransfer(static::STORE_REFERENCE, 'slt-footer', $this->assetUuid);
+        $assetExternalFacade->addAsset($startAssetMessageTransfer);
 
         // Assert
         $this->expectException(InvalidAssetExternalException::class);
 
         // Act
-        $assetExternalFacade->deleteAsset($scriptDeletedTransfer);
-        $assetExternalFacade->updateAsset($scriptUpdatedTransfer);
+        $assetExternalFacade->deleteAsset($delAssetMessageTransfer);
+        $assetExternalFacade->updateAsset($updateCheckMessageTransfer);
     }
 
     /**
@@ -235,15 +230,11 @@ class AssetExternalFacadeTest extends Unit
         $assetExternalFacade = $this->tester->getFacade();
 
         $container = new Container();
-        $assetExternalConfig = $this->getMockBuilder(AssetExternalConfig::class)->getMock();
-
-        $assetExternalConfig->method('getCurrentTenantIdentifier')->willReturn($this->tenantIdentifier);
 
         $assetExternalBusinessFactory = new AssetExternalBusinessFactory();
         $dependencyProvider = new AssetExternalDependencyProvider();
         $dependencyProvider->provideBusinessLayerDependencies($container);
         $assetExternalBusinessFactory->setContainer($container);
-        $assetExternalBusinessFactory->setConfig($assetExternalConfig);
         $assetExternalFacade->setFactory($assetExternalBusinessFactory);
 
         return $assetExternalFacade;
@@ -262,46 +253,6 @@ class AssetExternalFacadeTest extends Unit
             ->setAssetView('<script>')
             ->setAssetIdentifier($this->assetUuid)
             ->setSlotKey($cmsSlotKey)
-            ->setStores(['US', 'DE'])
-            ->setMessageAttributes(
-                (new MessageAttributesTransfer())
-                    ->setAppIdentifier($this->getUuid())
-                    ->setTenantIdentifier($tenantId));
-    }
-
-    /**
-     * @param string $tenantId
-     * @param string $cmsSlotKey
-     * @param string|null $assetUuid
-     *
-     * @return \Generated\Shared\Transfer\AssetUpdatedTransfer
-     */
-    protected function buildScriptUpdatedTransfer(string $tenantId, string $cmsSlotKey = 'test', ?string $assetUuid = null): AssetUpdatedTransfer
-    {
-        $assetUuid = $assetUuid ?: $this->getUuid();
-
-        return (new AssetUpdatedTransfer())
-            ->setAssetView('<script>')
-            ->setAssetIdentifier($assetUuid)
-            ->setSlotKey($cmsSlotKey)
-            ->setStores(['US', 'DE'])
-            ->setMessageAttributes(
-                (new MessageAttributesTransfer())
-                    ->setAppIdentifier($this->getUuid())
-                    ->setTenantIdentifier($tenantId));
-    }
-
-    /**
-     * @param string $tenantId
-     * @param string $cmsSlotKey
-     *
-     * @return \Generated\Shared\Transfer\AssetDeletedTransfer
-     */
-    protected function buildScriptDeletedTransfer(string $tenantId, string $cmsSlotKey = 'test'): AssetDeletedTransfer
-    {
-        return (new AssetDeletedTransfer())
-            ->setAssetIdentifier($this->getUuid())
-            ->setStores(['US', 'DE'])
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
                     ->setAppIdentifier($this->getUuid())

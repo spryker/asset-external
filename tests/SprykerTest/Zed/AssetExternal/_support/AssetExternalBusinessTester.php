@@ -8,6 +8,14 @@
 namespace SprykerTest\Zed\AssetExternal;
 
 use Codeception\Actor;
+use Generated\Shared\Transfer\AssetAddedMessageTransfer;
+use Generated\Shared\Transfer\AssetAddedTransfer;
+use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
+use Generated\Shared\Transfer\AssetDeletedTransfer;
+use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
+use Generated\Shared\Transfer\AssetUpdatedTransfer;
+use Generated\Shared\Transfer\MessageAttributesTransfer;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Inherited Methods
@@ -30,6 +38,70 @@ class AssetExternalBusinessTester extends Actor
     use _generated\AssetExternalBusinessTesterActions;
 
     /**
-     * Define custom actions here
+     * @param string $storeReference
+     * @param string $cmsSlotKey
+     *
+     * @return \Generated\Shared\Transfer\AssetAddedTransfer
      */
+    public function buildAssetAddedTransfer(string $storeReference, string $cmsSlotKey, string $assetUuid): AssetAddedTransfer
+    {
+        return (new AssetAddedTransfer())
+            ->setAssetName('test')
+            ->setAssetView('<script>')
+            ->setAssetIdentifier($assetUuid)
+            ->setSlotKey($cmsSlotKey)
+            ->setMessageAttributes(
+                (new MessageAttributesTransfer())
+                    ->setAppIdentifier($this->getUuid())
+                    ->setStoreReference($storeReference));
+    }
+
+    /**
+     * @param string $storeReference
+     * @param string $cmsSlotKey
+     * @param string|null $assetUuid
+     *
+     * @return \Generated\Shared\Transfer\AssetUpdatedTransfer
+     */
+    public function buildAssetUpdatedTransfer(
+        string $storeReference,
+        string $cmsSlotKey = 'test',
+        ?string $assetUuid = null
+    ): AssetUpdatedTransfer {
+        $assetUuid = $assetUuid ?: $this->getUuid();
+
+        return (new AssetUpdatedTransfer())
+            ->setAssetView('<script>')
+            ->setAssetView($assetUuid)
+            ->setAssetIdentifier($assetUuid)
+            ->setSlotKey($cmsSlotKey)
+            ->setMessageAttributes(
+                (new MessageAttributesTransfer())
+                    ->setAppIdentifier($this->getUuid())
+                    ->setStoreReference($storeReference));
+    }
+
+    /**
+     * @param string $storeReference
+     * @param string $cmsSlotKey
+     *
+     * @return \Generated\Shared\Transfer\AssetDeletedTransfer
+     */
+    public function buildAssetDeletedMessageTransfer(string $storeReference, string $cmsSlotKey = 'test'): AssetDeletedTransfer
+    {
+        return (new AssetDeletedTransfer())
+            ->setAssetIdentifier($this->getUuid())
+            ->setMessageAttributes(
+                (new MessageAttributesTransfer())
+                    ->setAppIdentifier($this->getUuid())
+                    ->setStoreReference($storeReference));
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid(): string
+    {
+        return Uuid::uuid4()->toString();
+    }
 }

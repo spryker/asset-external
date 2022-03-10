@@ -25,7 +25,6 @@ class AssetExternalMapper implements AssetExternalMapperInterface
         return $assetExternalTransfer->setAssetUuid($assetAddedTransfer->getAssetIdentifier())
             ->setAssetContent($assetAddedTransfer->getAssetView())
             ->setAssetName($assetAddedTransfer->getAssetName())
-            ->setCmsSlotKey($assetAddedTransfer->getSlotKey())
-            ->setStores($assetAddedTransfer->getStores());
+            ->setCmsSlotKey($assetAddedTransfer->getSlotKey());
     }
 }
