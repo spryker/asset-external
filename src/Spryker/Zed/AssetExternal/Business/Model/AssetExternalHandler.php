@@ -87,9 +87,9 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      */
     public function addAsset(AssetAddedTransfer $assetAddedTransfer): AssetExternalTransfer
     {
-        $assetAddedTransfer->getMessageAttributesOrFail()
-            ->requireAppIdentifier()
-            ->requireStoreReference();
+        $messageAttributes = $assetAddedTransfer->getMessageAttributesOrFail();
+        $messageAttributes->getPublisher()->requireAppIdentifier();
+        $messageAttributes->requireStoreReference();
 
         $assetAddedTransfer
             ->requireAssetView()
@@ -97,7 +97,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
             ->requireAssetIdentifier()
             ->requireSlotKey();
 
-        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetAddedTransfer->getMessageAttributes()->getStoreReferenceOrFail());
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($messageAttributes->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetAddedTransfer->getAssetIdentifier());
 
@@ -125,16 +125,16 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      */
     public function updateAsset(AssetUpdatedTransfer $assetUpdatedTransfer): AssetExternalTransfer
     {
-        $assetUpdatedTransfer->getMessageAttributesOrFail()
-            ->requireAppIdentifier()
-            ->requireStoreReference();
+        $messageAttributes = $assetUpdatedTransfer->getMessageAttributesOrFail();
+        $messageAttributes->getPublisher()->requireAppIdentifier();
+        $messageAttributes->requireStoreReference();
 
         $assetUpdatedTransfer
             ->requireAssetView()
             ->requireAssetIdentifier()
             ->requireSlotKey();
 
-        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetUpdatedTransfer->getMessageAttributes()->getStoreReferenceOrFail());
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($messageAttributes->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetUpdatedTransfer->getAssetIdentifier());
 
@@ -159,14 +159,14 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      */
     public function deleteAsset(AssetDeletedTransfer $assetDeletedTransfer): void
     {
-        $assetDeletedTransfer->getMessageAttributesOrFail()
-            ->requireAppIdentifier()
-            ->requireStoreReference();
+        $messageAttributes = $assetDeletedTransfer->getMessageAttributesOrFail();
+        $messageAttributes->getPublisher()->requireAppIdentifier();
+        $messageAttributes->requireStoreReference();
 
         $assetDeletedTransfer
             ->requireAssetIdentifier();
 
-        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetDeletedTransfer->getMessageAttributes()->getStoreReferenceOrFail());
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($messageAttributes->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
             ->findAssetExternalByAssetUuid((string)$assetDeletedTransfer->getAssetIdentifier());
 
