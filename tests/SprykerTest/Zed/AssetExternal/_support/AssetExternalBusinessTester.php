@@ -15,6 +15,7 @@ use Generated\Shared\Transfer\AssetDeletedTransfer;
 use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
 use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
+use Generated\Shared\Transfer\PublisherTransfer;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -52,7 +53,7 @@ class AssetExternalBusinessTester extends Actor
             ->setSlotKey($cmsSlotKey)
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setAppIdentifier($this->getUuid())
+                    ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->getUuid()))
                     ->setStoreReference($storeReference));
     }
 
@@ -77,7 +78,7 @@ class AssetExternalBusinessTester extends Actor
             ->setSlotKey($cmsSlotKey)
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setAppIdentifier($this->getUuid())
+                    ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->getUuid()))
                     ->setStoreReference($storeReference));
     }
 
@@ -93,7 +94,7 @@ class AssetExternalBusinessTester extends Actor
             ->setAssetIdentifier($this->getUuid())
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setAppIdentifier($this->getUuid())
+                    ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->getUuid()))
                     ->setStoreReference($storeReference));
     }
 

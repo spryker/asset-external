@@ -13,6 +13,7 @@ use Generated\Shared\Transfer\AssetDeletedTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
 use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
+use Generated\Shared\Transfer\PublisherTransfer;
 use Ramsey\Uuid\Uuid;
 use Spryker\Zed\AssetExternal\AssetExternalConfig;
 use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
@@ -143,7 +144,7 @@ class AssetExternalFacadeTest extends Unit
             ->setSlotKey('slt-footer')
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setAppIdentifier($this->tester->getUuid())
+                    ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->tester->getUuid()))
                     ->setStoreReference(static::STORE_REFERENCE));
 
         $expectedAssetTransfer = (new AssetExternalTransfer())->setCmsSlotKey('slt-footer')
@@ -190,7 +191,7 @@ class AssetExternalFacadeTest extends Unit
             ->setAssetIdentifier($this->assetUuid)
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setAppIdentifier($this->tester->getUuid())
+                    ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->tester->getUuid()))
                     ->setStoreReference(static::STORE_REFERENCE));
         $updateCheckMessageTransfer = $this->tester->buildAssetUpdatedTransfer(static::STORE_REFERENCE, 'slt-footer', $this->assetUuid);
         $assetExternalFacade->addAsset($startAssetMessageTransfer);
@@ -255,7 +256,7 @@ class AssetExternalFacadeTest extends Unit
             ->setSlotKey($cmsSlotKey)
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setAppIdentifier($this->getUuid())
+                    ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->tester->getUuid()))
                     ->setTenantIdentifier($tenantId));
     }
 
