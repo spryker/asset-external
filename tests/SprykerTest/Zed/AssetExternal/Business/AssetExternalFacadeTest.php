@@ -15,9 +15,6 @@ use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Generated\Shared\Transfer\PublisherTransfer;
 use Ramsey\Uuid\Uuid;
-use Spryker\Zed\AssetExternal\AssetExternalConfig;
-use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
-use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
 use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
 use Spryker\Zed\AssetExternal\Business\AssetExternalBusinessFactory;
 use Spryker\Zed\AssetExternal\Business\AssetExternalFacadeInterface;
@@ -94,6 +91,9 @@ class AssetExternalFacadeTest extends Unit
         $assetExternalFacade->addAsset($assetAddedTransfer);
     }
 
+    /**
+     * @return void
+     */
     public function testAddAssetAssertSuccessfull(): void
     {
         // Arrange
@@ -145,7 +145,8 @@ class AssetExternalFacadeTest extends Unit
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
                     ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->tester->getUuid()))
-                    ->setStoreReference(static::STORE_REFERENCE));
+                    ->setStoreReference(static::STORE_REFERENCE),
+            );
 
         $expectedAssetTransfer = (new AssetExternalTransfer())->setCmsSlotKey('slt-footer')
             ->setAssetName('test')
@@ -192,7 +193,8 @@ class AssetExternalFacadeTest extends Unit
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
                     ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->tester->getUuid()))
-                    ->setStoreReference(static::STORE_REFERENCE));
+                    ->setStoreReference(static::STORE_REFERENCE),
+            );
         $updateCheckMessageTransfer = $this->tester->buildAssetUpdatedTransfer(static::STORE_REFERENCE, 'slt-footer', $this->assetUuid);
         $assetExternalFacade->addAsset($startAssetMessageTransfer);
 
@@ -257,7 +259,8 @@ class AssetExternalFacadeTest extends Unit
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
                     ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->tester->getUuid()))
-                    ->setTenantIdentifier($tenantId));
+                ->setTenantIdentifier($tenantId),
+            );
     }
 
     /**

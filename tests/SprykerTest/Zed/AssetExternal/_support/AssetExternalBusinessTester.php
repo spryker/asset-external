@@ -8,11 +8,8 @@
 namespace SprykerTest\Zed\AssetExternal;
 
 use Codeception\Actor;
-use Generated\Shared\Transfer\AssetAddedMessageTransfer;
 use Generated\Shared\Transfer\AssetAddedTransfer;
-use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
 use Generated\Shared\Transfer\AssetDeletedTransfer;
-use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
 use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Generated\Shared\Transfer\PublisherTransfer;
@@ -41,6 +38,7 @@ class AssetExternalBusinessTester extends Actor
     /**
      * @param string $storeReference
      * @param string $cmsSlotKey
+     * @param string $assetUuid
      *
      * @return \Generated\Shared\Transfer\AssetAddedTransfer
      */
@@ -54,7 +52,8 @@ class AssetExternalBusinessTester extends Actor
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
                     ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->getUuid()))
-                    ->setStoreReference($storeReference));
+                    ->setStoreReference($storeReference),
+            );
     }
 
     /**
@@ -79,7 +78,8 @@ class AssetExternalBusinessTester extends Actor
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
                     ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->getUuid()))
-                    ->setStoreReference($storeReference));
+                    ->setStoreReference($storeReference),
+            );
     }
 
     /**
@@ -95,7 +95,8 @@ class AssetExternalBusinessTester extends Actor
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
                     ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->getUuid()))
-                    ->setStoreReference($storeReference));
+                    ->setStoreReference($storeReference),
+            );
     }
 
     /**

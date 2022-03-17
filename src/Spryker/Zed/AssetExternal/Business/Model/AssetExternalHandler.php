@@ -13,7 +13,6 @@ use Generated\Shared\Transfer\AssetExternalTransfer;
 use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Generated\Shared\Transfer\CmsSlotCriteriaTransfer;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
-use Spryker\Zed\AssetExternal\Business\Exception\InvalidTenantIdentifierException;
 use Spryker\Zed\AssetExternal\Business\Mapper\AssetExternalMapperInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface;
@@ -62,6 +61,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface $assetExternalEntityManager
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface $assetExternalRepository
+     * @param \Spryker\Zed\AssetExternal\Business\Mapper\AssetExternalMapperInterface $assetExternalMapper
      * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface $storeReferenceFacade
      */
     public function __construct(
@@ -89,7 +89,6 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     {
         $messageAttributes = $assetAddedTransfer->getMessageAttributesOrFail();
         $messageAttributes->getPublisher()->requireAppIdentifier();
-        $messageAttributes->requireStoreReference();
 
         $assetAddedTransfer
             ->requireAssetView()
@@ -127,7 +126,6 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     {
         $messageAttributes = $assetUpdatedTransfer->getMessageAttributesOrFail();
         $messageAttributes->getPublisher()->requireAppIdentifier();
-        $messageAttributes->requireStoreReference();
 
         $assetUpdatedTransfer
             ->requireAssetView()
@@ -161,7 +159,6 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     {
         $messageAttributes = $assetDeletedTransfer->getMessageAttributesOrFail();
         $messageAttributes->getPublisher()->requireAppIdentifier();
-        $messageAttributes->requireStoreReference();
 
         $assetDeletedTransfer
             ->requireAssetIdentifier();
