@@ -244,26 +244,6 @@ class AssetExternalFacadeTest extends Unit
     }
 
     /**
-     * @param string $tenantId
-     * @param string $cmsSlotKey
-     *
-     * @return \Generated\Shared\Transfer\AssetAddedTransfer
-     */
-    protected function buildScriptAddedTransfer(string $tenantId, string $cmsSlotKey = 'test'): AssetAddedTransfer
-    {
-        return (new AssetAddedTransfer())
-            ->setAssetName('test')
-            ->setAssetView('<script>')
-            ->setAssetIdentifier($this->assetUuid)
-            ->setSlotKey($cmsSlotKey)
-            ->setMessageAttributes(
-                (new MessageAttributesTransfer())
-                    ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->tester->getUuid()))
-                ->setTenantIdentifier($tenantId),
-            );
-    }
-
-    /**
      * @return string
      */
     protected function getUuid(): string

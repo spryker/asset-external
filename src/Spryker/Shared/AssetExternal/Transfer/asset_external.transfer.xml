@@ -19,7 +19,6 @@
     </transfer>
 
     <transfer name="Publisher">
-        <property name="storeReference" type="string"/>
         <property name="appIdentifier" type="string"/>
     </transfer>
 
