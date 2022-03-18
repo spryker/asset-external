@@ -8,10 +8,6 @@
 namespace SprykerTest\Zed\AssetExternal\Business;
 
 use Codeception\Test\Unit;
-use Generated\Shared\Transfer\AssetDeletedTransfer;
-use Generated\Shared\Transfer\AssetExternalTransfer;
-use Generated\Shared\Transfer\AssetUpdatedTransfer;
-use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
 use Spryker\Zed\AssetExternal\Business\AssetExternalBusinessFactory;
 use Spryker\Zed\AssetExternal\Business\AssetExternalFacadeInterface;
@@ -62,7 +58,12 @@ class AssetExternalFacadeTest extends Unit
     public function testAddAssetAssertThrowsExceptionWhenStoreReferenceIsInvalid(): void
     {
         // Arrange
-        $assetAddedTransfer = $this->tester->buildAssetAddedTransfer('1', 'test', $this->assetUuid);
+        $assetAddedTransfer = $this->tester->buildAssetAddedTransfer(
+            '1',
+            'test',
+            $this->assetUuid,
+        );
+
         $assetExternalFacade = $this->getAssetExternalFacade();
 
         // Assert
@@ -97,11 +98,11 @@ class AssetExternalFacadeTest extends Unit
         $assetMessageTransfer = $this->tester->buildAssetAddedTransfer(static::STORE_REFERENCE, 'slt-footer', $this->assetUuid);
 
         $assetExternalFacade = $this->getAssetExternalFacade();
-        $expectedAssetTransfer = (new AssetExternalTransfer())->setCmsSlotKey('slt-footer')
-            ->setAssetName('test')
-            ->setAssetContent('<script>')
-            ->setIdAssetExternal(1)
-            ->setAssetUuid($this->assetUuid);
+
+        $expectedAssetTransfer = $this->tester->buildAssetExternalTransfer(
+            '<script>',
+            $this->assetUuid,
+        );
 
         // Act
         $assetTransfer = $assetExternalFacade->addAsset($assetMessageTransfer);
@@ -134,22 +135,23 @@ class AssetExternalFacadeTest extends Unit
     {
         // Arrange
         $assetExternalFacade = $this->getAssetExternalFacade();
-        $startAssetMessageTransfer = $this->tester->buildAssetAddedTransfer(static::STORE_REFERENCE, 'slt-footer', $this->assetUuid);
-        $newAssetMessageTransfer = (new AssetUpdatedTransfer())
-            ->setAssetView('<script> </script>')
-            ->setAssetIdentifier($this->assetUuid)
-            ->setSlotKey('slt-footer')
-            ->setMessageAttributes(
-                (new MessageAttributesTransfer())
-                    ->setPublisher($this->tester->havePublisherTransfer())
-                    ->setStoreReference(static::STORE_REFERENCE),
-            );
+        $startAssetMessageTransfer = $this->tester->buildAssetAddedTransfer(
+            static::STORE_REFERENCE,
+            'slt-footer',
+            $this->assetUuid,
+        );
 
-        $expectedAssetTransfer = (new AssetExternalTransfer())->setCmsSlotKey('slt-footer')
-            ->setAssetName('test')
-            ->setAssetContent('<script> </script>')
-            ->setIdAssetExternal(1)
-            ->setAssetUuid($this->assetUuid);
+        $newAssetMessageTransfer = $this->tester->buildAssetUpdatedTransfer(
+            static::STORE_REFERENCE,
+            'slt-footer',
+            $this->assetUuid,
+            '<script> </script>',
+        );
+
+        $expectedAssetTransfer = $this->tester->buildAssetExternalTransfer(
+            '<script> </script>',
+            $this->assetUuid,
+        );
 
         // Act
         $assetExternalFacade->addAsset($startAssetMessageTransfer);
@@ -184,15 +186,24 @@ class AssetExternalFacadeTest extends Unit
     {
         // Arrange
         $assetExternalFacade = $this->getAssetExternalFacade();
-        $startAssetMessageTransfer = $this->tester->buildAssetAddedTransfer(static::STORE_REFERENCE, 'slt-footer', $this->assetUuid);
-        $delAssetMessageTransfer = (new AssetDeletedTransfer())
-            ->setAssetIdentifier($this->assetUuid)
-            ->setMessageAttributes(
-                (new MessageAttributesTransfer())
-                    ->setPublisher($this->tester->havePublisherTransfer())
-                    ->setStoreReference(static::STORE_REFERENCE),
-            );
-        $updateCheckMessageTransfer = $this->tester->buildAssetUpdatedTransfer(static::STORE_REFERENCE, 'slt-footer', $this->assetUuid);
+        $startAssetMessageTransfer = $this->tester->buildAssetAddedTransfer(
+            static::STORE_REFERENCE,
+            'slt-footer',
+            $this->assetUuid,
+        );
+
+        $delAssetMessageTransfer = $this->tester->buildAssetDeletedMessageTransfer(
+            static::STORE_REFERENCE,
+            'test',
+            $this->assetUuid,
+        );
+
+        $updateCheckMessageTransfer = $this->tester->buildAssetUpdatedTransfer(
+            static::STORE_REFERENCE,
+            'slt-footer',
+            $this->assetUuid,
+        );
+
         $assetExternalFacade->addAsset($startAssetMessageTransfer);
 
         // Assert
