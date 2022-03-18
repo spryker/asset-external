@@ -8,13 +8,10 @@
 namespace SprykerTest\Zed\AssetExternal\Business;
 
 use Codeception\Test\Unit;
-use Generated\Shared\Transfer\AssetAddedTransfer;
 use Generated\Shared\Transfer\AssetDeletedTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
 use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
-use Generated\Shared\Transfer\PublisherTransfer;
-use Ramsey\Uuid\Uuid;
 use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
 use Spryker\Zed\AssetExternal\Business\AssetExternalBusinessFactory;
 use Spryker\Zed\AssetExternal\Business\AssetExternalFacadeInterface;
@@ -144,7 +141,7 @@ class AssetExternalFacadeTest extends Unit
             ->setSlotKey('slt-footer')
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->tester->getUuid()))
+                    ->setPublisher($this->tester->havePublisherTransfer())
                     ->setStoreReference(static::STORE_REFERENCE),
             );
 
@@ -192,7 +189,7 @@ class AssetExternalFacadeTest extends Unit
             ->setAssetIdentifier($this->assetUuid)
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->tester->getUuid()))
+                    ->setPublisher($this->tester->havePublisherTransfer())
                     ->setStoreReference(static::STORE_REFERENCE),
             );
         $updateCheckMessageTransfer = $this->tester->buildAssetUpdatedTransfer(static::STORE_REFERENCE, 'slt-footer', $this->assetUuid);
@@ -241,13 +238,5 @@ class AssetExternalFacadeTest extends Unit
         $assetExternalFacade->setFactory($assetExternalBusinessFactory);
 
         return $assetExternalFacade;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getUuid(): string
-    {
-        return Uuid::uuid4()->toString();
     }
 }

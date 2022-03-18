@@ -51,7 +51,7 @@ class AssetExternalBusinessTester extends Actor
             ->setSlotKey($cmsSlotKey)
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->getUuid()))
+                    ->setPublisher($this->havePublisherTransfer())
                     ->setStoreReference($storeReference),
             );
     }
@@ -77,7 +77,7 @@ class AssetExternalBusinessTester extends Actor
             ->setSlotKey($cmsSlotKey)
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->getUuid()))
+                    ->setPublisher($this->havePublisherTransfer())
                     ->setStoreReference($storeReference),
             );
     }
@@ -94,7 +94,7 @@ class AssetExternalBusinessTester extends Actor
             ->setAssetIdentifier($this->getUuid())
             ->setMessageAttributes(
                 (new MessageAttributesTransfer())
-                    ->setPublisher((new PublisherTransfer())->setAppIdentifier($this->getUuid()))
+                    ->setPublisher($this->havePublisherTransfer())
                     ->setStoreReference($storeReference),
             );
     }
@@ -105,5 +105,13 @@ class AssetExternalBusinessTester extends Actor
     public function getUuid(): string
     {
         return Uuid::uuid4()->toString();
+    }
+
+    /**
+     * @return \Generated\Shared\Transfer\PublisherTransfer
+     */
+    public function havePublisherTransfer(): PublisherTransfer
+    {
+        return (new PublisherTransfer())->setAppIdentifier($this->getUuid());
     }
 }
