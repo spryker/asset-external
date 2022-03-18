@@ -36,6 +36,7 @@ class AssetExternalBusinessTester extends Actor
     /**
      * @param string $storeReference
      * @param string $cmsSlotKey
+     * @param string $assetUuid
      *
      * @return \Generated\Shared\Transfer\AssetAddedMessageTransfer
      */
