@@ -11,7 +11,7 @@
         "spryker/store": "^1.12.0",
         "spryker/store-reference": "^1.0.0",
         "spryker/transfer": "^3.27.0",
-        "spryker/message-broker-extension": "*"
+        "spryker/message-broker-extension": "^1.0.0"
     },
     "require-dev": {
         "spryker/code-sniffer": "*",
