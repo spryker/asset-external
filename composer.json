@@ -15,7 +15,6 @@
     },
     "require-dev": {
         "spryker/code-sniffer": "*",
-        "spryker/event": "*",
         "spryker/propel": "*",
         "spryker/ramsey-uuid": "*",
         "spryker/testify": "*"
