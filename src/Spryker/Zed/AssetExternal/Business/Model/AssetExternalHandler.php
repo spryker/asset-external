@@ -88,7 +88,6 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     public function addAsset(AssetAddedTransfer $assetAddedTransfer): AssetExternalTransfer
     {
         $messageAttributes = $assetAddedTransfer->getMessageAttributesOrFail();
-        $messageAttributes->getPublisher()->requireAppIdentifier();
 
         $assetAddedTransfer
             ->requireAssetView()
@@ -125,7 +124,6 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     public function updateAsset(AssetUpdatedTransfer $assetUpdatedTransfer): AssetExternalTransfer
     {
         $messageAttributes = $assetUpdatedTransfer->getMessageAttributesOrFail();
-        $messageAttributes->getPublisher()->requireAppIdentifier();
 
         $assetUpdatedTransfer
             ->requireAssetView()
@@ -158,7 +156,6 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     public function deleteAsset(AssetDeletedTransfer $assetDeletedTransfer): void
     {
         $messageAttributes = $assetDeletedTransfer->getMessageAttributesOrFail();
-        $messageAttributes->getPublisher()->requireAppIdentifier();
 
         $assetDeletedTransfer
             ->requireAssetIdentifier();
