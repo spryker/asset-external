@@ -115,7 +115,7 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\ScriptUpdatedTransfer $assetUpdatedTransfer
+     * @param \Generated\Shared\Transfer\AssetUpdatedTransfer $assetUpdatedTransfer
      *
      * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException
      *
