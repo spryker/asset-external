@@ -50,6 +50,7 @@ class AssetExternalFacadeTest extends Unit
     {
         parent::setUp();
         $this->assetUuid = $this->tester->getUuid();
+        $this->tester->setStoreReferenceData(['DE' => static::STORE_REFERENCE]);
     }
 
     /**
