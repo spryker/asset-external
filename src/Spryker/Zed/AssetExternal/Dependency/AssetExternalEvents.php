@@ -58,19 +58,4 @@ class AssetExternalEvents
      * @var string
      */
     public const ENTITY_SPY_ASSET_EXTERNAL_STORE_DELETE = 'Entity.spy_asset_external_store.delete';
-
-    /**
-     * @var string
-     */
-    public const EVENT_SCRIPT_ADDED = 'Script.Added';
-
-    /**
-     * @var string
-     */
-    public const EVENT_SCRIPT_UPDATED = 'Script.Updated';
-
-    /**
-     * @var string
-     */
-    public const EVENT_SCRIPT_DELETED = 'Script.Deleted';
 }

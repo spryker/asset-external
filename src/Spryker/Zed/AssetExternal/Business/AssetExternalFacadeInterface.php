@@ -7,10 +7,10 @@
 
 namespace Spryker\Zed\AssetExternal\Business;
 
-use Generated\Shared\Transfer\AssetAddedMessageTransfer;
-use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
+use Generated\Shared\Transfer\AssetAddedTransfer;
+use Generated\Shared\Transfer\AssetDeletedTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
-use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
+use Generated\Shared\Transfer\AssetUpdatedTransfer;
 
 interface AssetExternalFacadeInterface
 {
@@ -25,11 +25,11 @@ interface AssetExternalFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\AssetAddedMessageTransfer $assetAddedMessageTransfer
+     * @param \Generated\Shared\Transfer\AssetAddedTransfer $assetAddedTransfer
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function addAsset(AssetAddedMessageTransfer $assetAddedMessageTransfer): AssetExternalTransfer;
+    public function addAsset(AssetAddedTransfer $assetAddedTransfer): AssetExternalTransfer;
 
     /**
      * Specification:
@@ -42,11 +42,11 @@ interface AssetExternalFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\AssetUpdatedMessageTransfer $assetUpdatedMessageTransfer
+     * @param \Generated\Shared\Transfer\AssetUpdatedTransfer $assetUpdatedTransfer
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function updateAsset(AssetUpdatedMessageTransfer $assetUpdatedMessageTransfer): AssetExternalTransfer;
+    public function updateAsset(AssetUpdatedTransfer $assetUpdatedTransfer): AssetExternalTransfer;
 
     /**
      * Specification:
@@ -55,11 +55,11 @@ interface AssetExternalFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\AssetDeletedMessageTransfer $assetDeletedMessageTransfer
+     * @param \Generated\Shared\Transfer\AssetDeletedTransfer $assetDeletedTransfer
      *
      * @return void
      */
-    public function deleteAsset(AssetDeletedMessageTransfer $assetDeletedMessageTransfer): void;
+    public function deleteAsset(AssetDeletedTransfer $assetDeletedTransfer): void;
 
     /**
      * Specification:

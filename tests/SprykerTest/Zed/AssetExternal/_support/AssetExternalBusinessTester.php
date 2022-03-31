@@ -8,14 +8,13 @@
 namespace SprykerTest\Zed\AssetExternal;
 
 use Codeception\Actor;
-use Codeception\Util\Stub;
-use Generated\Shared\Transfer\AssetAddedMessageTransfer;
-use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
-use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
-use Generated\Shared\Transfer\StoreTransfer;
+use Generated\Shared\Transfer\AssetAddedTransfer;
+use Generated\Shared\Transfer\AssetDeletedTransfer;
+use Generated\Shared\Transfer\AssetExternalTransfer;
+use Generated\Shared\Transfer\AssetUpdatedTransfer;
+use Generated\Shared\Transfer\MessageAttributesTransfer;
+use Generated\Shared\Transfer\PublisherTransfer;
 use Ramsey\Uuid\Uuid;
-use Spryker\Zed\AssetExternal\AssetExternalDependencyProvider;
-use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface;
 
 /**
  * Inherited Methods
@@ -38,31 +37,51 @@ class AssetExternalBusinessTester extends Actor
     use _generated\AssetExternalBusinessTesterActions;
 
     /**
-     * @var string
-     */
-    public const STORE_REFERENCE = 'dev-DE';
-
-    /**
-     * @var string
-     */
-    public const STORE_NAME = 'DE';
-
-    /**
      * @param string $storeReference
      * @param string $cmsSlotKey
      * @param string $assetUuid
      *
-     * @return \Generated\Shared\Transfer\AssetAddedMessageTransfer
+     * @return \Generated\Shared\Transfer\AssetAddedTransfer
      */
-    public function buildAssetAddedMessageTransfer(string $storeReference, string $cmsSlotKey, string $assetUuid): AssetAddedMessageTransfer
+    public function buildAssetAddedTransfer(string $storeReference, string $cmsSlotKey, string $assetUuid): AssetAddedTransfer
     {
-        return (new AssetAddedMessageTransfer())
-            ->setScriptName('test')
-            ->setScriptView('<script>')
-            ->setScriptUuid($assetUuid)
-            ->setAppId($this->getUuid())
+        return (new AssetAddedTransfer())
+            ->setAssetName('test')
+            ->setAssetView('<script>')
+            ->setAssetIdentifier($assetUuid)
             ->setSlotKey($cmsSlotKey)
-            ->setStoreReference($storeReference);
+            ->setMessageAttributes(
+                (new MessageAttributesTransfer())
+                    ->setPublisher($this->havePublisherTransfer())
+                    ->setStoreReference($storeReference),
+            );
+    }
+
+    /**
+     * @param string $storeReference
+     * @param string $cmsSlotKey
+     * @param string|null $assetUuid
+     * @param string|null $assetView
+     *
+     * @return \Generated\Shared\Transfer\AssetUpdatedTransfer
+     */
+    public function buildAssetUpdatedTransfer(
+        string $storeReference,
+        string $cmsSlotKey = 'test',
+        ?string $assetUuid = null,
+        ?string $assetView = '<script>'
+    ): AssetUpdatedTransfer {
+        $assetUuid = $assetUuid ?: $this->getUuid();
+
+        return (new AssetUpdatedTransfer())
+            ->setAssetView($assetView)
+            ->setAssetIdentifier($assetUuid)
+            ->setSlotKey($cmsSlotKey)
+            ->setMessageAttributes(
+                (new MessageAttributesTransfer())
+                    ->setPublisher($this->havePublisherTransfer())
+                    ->setStoreReference($storeReference),
+            );
     }
 
     /**
@@ -70,35 +89,22 @@ class AssetExternalBusinessTester extends Actor
      * @param string $cmsSlotKey
      * @param string|null $assetUuid
      *
-     * @return \Generated\Shared\Transfer\AssetUpdatedMessageTransfer
+     * @return \Generated\Shared\Transfer\AssetDeletedTransfer
      */
-    public function buildAssetUpdatedMessageTransfer(
+    public function buildAssetDeletedMessageTransfer(
         string $storeReference,
         string $cmsSlotKey = 'test',
         ?string $assetUuid = null
-    ): AssetUpdatedMessageTransfer {
+    ): AssetDeletedTransfer {
         $assetUuid = $assetUuid ?: $this->getUuid();
 
-        return (new AssetUpdatedMessageTransfer())
-            ->setScriptView('<script>')
-            ->setScriptUuid($assetUuid)
-            ->setAppId($this->getUuid())
-            ->setSlotKey($cmsSlotKey)
-            ->setStoreReference($storeReference);
-    }
-
-    /**
-     * @param string $storeReference
-     * @param string $cmsSlotKey
-     *
-     * @return \Generated\Shared\Transfer\AssetDeletedMessageTransfer
-     */
-    public function buildAssetDeletedMessageTransfer(string $storeReference, string $cmsSlotKey = 'test'): AssetDeletedMessageTransfer
-    {
-        return (new AssetDeletedMessageTransfer())
-            ->setScriptUuid($this->getUuid())
-            ->setAppId($this->getUuid())
-            ->setStoreReference($storeReference);
+        return (new AssetDeletedTransfer())
+            ->setAssetIdentifier($assetUuid)
+            ->setMessageAttributes(
+                (new MessageAttributesTransfer())
+                    ->setPublisher($this->havePublisherTransfer())
+                    ->setStoreReference($storeReference),
+            );
     }
 
     /**
@@ -110,24 +116,33 @@ class AssetExternalBusinessTester extends Actor
     }
 
     /**
-     * @return void
+     * @return \Generated\Shared\Transfer\PublisherTransfer
      */
-    public function mockStoreReferenceFacade(): void
+    public function haveMessageAttributesTransfer(): MessageAttributesTransfer
     {
-        $store = $this->haveStore(['name' => static::STORE_NAME]);
-        $storeTransfer = (new StoreTransfer())
-            ->setName(static::STORE_NAME)
-            ->setStoreReference(static::STORE_REFERENCE)
-            ->setIdStore($store->getIdStore());
+        return (new PublisherTransfer())->setAppIdentifier($this->getUuid());
+    }
 
-        $storeReferenceFacadeMock = Stub::makeEmpty(
-            AssetExternalToStoreReferenceInterface::class,
-            [
-                'getStoreByStoreReference' => $storeTransfer,
-                'getStoreByStoreName' => $storeTransfer,
-            ],
-        );
+    /**
+     * @return \Generated\Shared\Transfer\PublisherTransfer
+     */
+    public function havePublisherTransfer(): PublisherTransfer
+    {
+        return (new PublisherTransfer())->setAppIdentifier($this->getUuid());
+    }
 
-        $this->setDependency(AssetExternalDependencyProvider::FACADE_STORE_REFERENCE, $storeReferenceFacadeMock);
+    /**
+     * @param string $assetContent
+     * @param string $assetUuid
+     *
+     * @return \Generated\Shared\Transfer\AssetExternalTransfer
+     */
+    public function buildAssetExternalTransfer(string $assetContent, string $assetUuid): AssetExternalTransfer
+    {
+        return (new AssetExternalTransfer())->setCmsSlotKey('slt-footer')
+            ->setAssetName('test')
+            ->setAssetContent($assetContent)
+            ->setIdAssetExternal(1)
+            ->setAssetUuid($assetUuid);
     }
 }

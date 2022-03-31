@@ -31,7 +31,7 @@ class AssetExternalDependencyProvider extends AbstractBundleDependencyProvider
     /**
      * @var string
      */
-    public const FACADE_STORE_REFERENCE = 'FACADE_STORE_REFERENCE';
+    public const SERVICE_STORE_REFERENCE = 'SERVICE_STORE_REFERENCE';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
@@ -55,7 +55,7 @@ class AssetExternalDependencyProvider extends AbstractBundleDependencyProvider
      */
     protected function addStoreReferenceService(Container $container): Container
     {
-        $container->set(static::FACADE_STORE_REFERENCE, function (Container $container) {
+        $container->set(static::SERVICE_STORE_REFERENCE, function (Container $container) {
             return new AssetExternalToStoreReferenceFacadeBridge($container->getLocator()->storeReference()->facade());
         });
 

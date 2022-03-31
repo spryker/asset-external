@@ -7,12 +7,13 @@
 
 namespace Spryker\Zed\AssetExternal\Business\Model;
 
-use Generated\Shared\Transfer\AssetAddedMessageTransfer;
-use Generated\Shared\Transfer\AssetDeletedMessageTransfer;
+use Generated\Shared\Transfer\AssetAddedTransfer;
+use Generated\Shared\Transfer\AssetDeletedTransfer;
 use Generated\Shared\Transfer\AssetExternalTransfer;
-use Generated\Shared\Transfer\AssetUpdatedMessageTransfer;
+use Generated\Shared\Transfer\AssetUpdatedTransfer;
 use Generated\Shared\Transfer\CmsSlotCriteriaTransfer;
 use Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException;
+use Spryker\Zed\AssetExternal\Business\Mapper\AssetExternalMapperInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface;
 use Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface;
 use Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface;
@@ -41,6 +42,17 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
     protected $assetExternalEntityManager;
 
     /**
+     * @var \Spryker\Zed\AssetExternal\Business\Mapper\AssetExternalMapperInterface
+     */
+    protected $assetExternalMapper;
+
+    /**
+     * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreBridgeInterface $storeFacade
+     * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade
+     * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface $assetExternalEntityManager
+     * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface $assetExternalRepository
+     * @param \Spryker\Zed\AssetExternal\AssetExternalConfig $config
+     * @param \Spryker\Zed\AssetExternal\Business\Mapper\AssetExternalMapperInterface $assetExternalMapper
      * @var \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface
      */
     protected $storeReferenceFacade;
@@ -49,103 +61,108 @@ class AssetExternalHandler implements AssetExternalHandlerInterface
      * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalEntityManagerInterface $assetExternalEntityManager
      * @param \Spryker\Zed\AssetExternal\Persistence\AssetExternalRepositoryInterface $assetExternalRepository
+     * @param \Spryker\Zed\AssetExternal\Business\Mapper\AssetExternalMapperInterface $assetExternalMapper
      * @param \Spryker\Zed\AssetExternal\Dependency\Facade\AssetExternalToStoreReferenceInterface $storeReferenceFacade
      */
     public function __construct(
         AssetExternalToCmsSlotFacadeBridgeInterface $cmsSlotFacade,
         AssetExternalEntityManagerInterface $assetExternalEntityManager,
         AssetExternalRepositoryInterface $assetExternalRepository,
+        AssetExternalMapperInterface $assetExternalMapper,
         AssetExternalToStoreReferenceInterface $storeReferenceFacade
     ) {
         $this->cmsSlotFacade = $cmsSlotFacade;
-        $this->assetExternalRepository = $assetExternalRepository;
         $this->assetExternalEntityManager = $assetExternalEntityManager;
+        $this->assetExternalRepository = $assetExternalRepository;
+        $this->assetExternalMapper = $assetExternalMapper;
         $this->storeReferenceFacade = $storeReferenceFacade;
     }
 
     /**
-     * @param \Generated\Shared\Transfer\AssetAddedMessageTransfer $assetAddedMessageTransfer
+     * @param \Generated\Shared\Transfer\AssetAddedTransfer $assetAddedTransfer
      *
      * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function addAsset(AssetAddedMessageTransfer $assetAddedMessageTransfer): AssetExternalTransfer
+    public function addAsset(AssetAddedTransfer $assetAddedTransfer): AssetExternalTransfer
     {
-        $assetAddedMessageTransfer
-            ->requireAppId()
-            ->requireScriptView()
-            ->requireScriptName()
-            ->requireScriptUuid()
+        $messageAttributes = $assetAddedTransfer->getMessageAttributesOrFail();
+
+        $assetAddedTransfer
+            ->requireAssetView()
+            ->requireAssetName()
+            ->requireAssetIdentifier()
             ->requireSlotKey();
 
-        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetAddedMessageTransfer->getStoreReferenceOrFail());
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($messageAttributes->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
-            ->findAssetExternalByAssetUuid((string)$assetAddedMessageTransfer->getScriptUuid());
+            ->findAssetExternalByAssetUuid((string)$assetAddedTransfer->getAssetIdentifier());
 
         if ($assetExternalTransfer !== null) {
             throw new InvalidAssetExternalException('This asset already exists in DB.');
         }
 
-        $this->validateCmsSlot((string)$assetAddedMessageTransfer->getSlotKey());
+        $this->validateCmsSlot((string)$assetAddedTransfer->getSlotKey());
 
-        $assetExternalTransfer = (new AssetExternalTransfer())
-            ->setAssetUuid($assetAddedMessageTransfer->getScriptUuid())
-            ->setAssetContent($assetAddedMessageTransfer->getScriptView())
-            ->setAssetName($assetAddedMessageTransfer->getScriptName())
-            ->setCmsSlotKey($assetAddedMessageTransfer->getSlotKey());
+        $assetExternalTransfer = $this->assetExternalMapper->mapAssetAddedTransferToAssetExternalTransfer(
+            $assetAddedTransfer,
+            new AssetExternalTransfer(),
+        );
 
         return $this->assetExternalEntityManager
             ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, [$storeTransfer]);
     }
 
     /**
-     * @param \Generated\Shared\Transfer\AssetUpdatedMessageTransfer $assetUpdatedMessageTransfer
+     * @param \Generated\Shared\Transfer\AssetUpdatedTransfer $assetUpdatedTransfer
      *
      * @throws \Spryker\Zed\AssetExternal\Business\Exception\InvalidAssetExternalException
      *
      * @return \Generated\Shared\Transfer\AssetExternalTransfer
      */
-    public function updateAsset(AssetUpdatedMessageTransfer $assetUpdatedMessageTransfer): AssetExternalTransfer
+    public function updateAsset(AssetUpdatedTransfer $assetUpdatedTransfer): AssetExternalTransfer
     {
-        $assetUpdatedMessageTransfer
-            ->requireAppId()
-            ->requireScriptView()
-            ->requireScriptUuid()
+        $messageAttributes = $assetUpdatedTransfer->getMessageAttributesOrFail();
+
+        $assetUpdatedTransfer
+            ->requireAssetView()
+            ->requireAssetIdentifier()
             ->requireSlotKey();
 
-        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetUpdatedMessageTransfer->getStoreReferenceOrFail());
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($messageAttributes->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
-            ->findAssetExternalByAssetUuid((string)$assetUpdatedMessageTransfer->getScriptUuid());
+            ->findAssetExternalByAssetUuid((string)$assetUpdatedTransfer->getAssetIdentifier());
 
         if ($assetExternalTransfer === null) {
             throw new InvalidAssetExternalException('This asset doesn\'t exist in DB.');
         }
 
-        $this->validateCmsSlot((string)$assetUpdatedMessageTransfer->getSlotKey());
+        $this->validateCmsSlot((string)$assetUpdatedTransfer->getSlotKey());
 
         $assetExternalTransfer
-            ->setAssetContent($assetUpdatedMessageTransfer->getScriptView())
-            ->setCmsSlotKey($assetUpdatedMessageTransfer->getSlotKey());
+            ->setAssetContent($assetUpdatedTransfer->getAssetView())
+            ->setCmsSlotKey($assetUpdatedTransfer->getSlotKey());
 
         return $this->assetExternalEntityManager
             ->saveAssetExternalAssetExternalWithAssetExternalStores($assetExternalTransfer, [$storeTransfer]);
     }
 
     /**
-     * @param \Generated\Shared\Transfer\AssetDeletedMessageTransfer $assetDeletedMessageTransfer
+     * @param \Generated\Shared\Transfer\AssetDeletedTransfer $assetDeletedTransfer
      *
      * @return void
      */
-    public function deleteAsset(AssetDeletedMessageTransfer $assetDeletedMessageTransfer): void
+    public function deleteAsset(AssetDeletedTransfer $assetDeletedTransfer): void
     {
-        $assetDeletedMessageTransfer
-            ->requireAppId()
-            ->requireScriptUuid();
+        $messageAttributes = $assetDeletedTransfer->getMessageAttributesOrFail();
 
-        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($assetDeletedMessageTransfer->getStoreReferenceOrFail());
+        $assetDeletedTransfer
+            ->requireAssetIdentifier();
+
+        $storeTransfer = $this->storeReferenceFacade->getStoreByStoreReference($messageAttributes->getStoreReferenceOrFail());
         $assetExternalTransfer = $this->assetExternalRepository
-            ->findAssetExternalByAssetUuid((string)$assetDeletedMessageTransfer->getScriptUuid());
+            ->findAssetExternalByAssetUuid((string)$assetDeletedTransfer->getAssetIdentifier());
 
         if (!$assetExternalTransfer) {
             return;
